@@ -33,28 +33,26 @@
       <div class="brand">Kling</div>
       <nav class="header-nav">
         <a href="#intro" data-i18n="nav_intro">Intro</a>
-        <a href="#search" data-i18n="nav_search">Search</a>
         <a href="#articles" data-i18n="nav_articles">Articles</a>
         <a href="#rec-articles" data-i18n="nav_rec_articles">Recommended</a>
         <a href="#rec-videos" data-i18n="nav_rec_videos">Videos</a>
         <a href="#music" data-i18n="nav_music">Music</a>
         <a class="nav-cta" href="#publish" data-i18n="nav_publish">Publish</a>
+        <div class="header-search">
+          <input
+            type="search"
+            class="search-input compact"
+            data-search
+            aria-label="Search content"
+            data-i18n-placeholder="search_placeholder"
+            placeholder="搜索文章 / 视频 / 音乐"
+          />
+          <span class="search-count" data-search-count>0</span>
+        </div>
       </nav>
     </header>
 
     <main>
-      <div class="search-bar" id="search" data-reveal>
-        <input
-          type="search"
-          class="search-input"
-          data-search
-          aria-label="Search content"
-          data-i18n-placeholder="search_placeholder"
-          placeholder="搜索文章 / 视频 / 音乐"
-        />
-        <span class="search-tip" data-i18n="search_hint">输入关键词即可过滤</span>
-        <span class="search-count" data-search-count>0</span>
-      </div>
       <p class="empty-state search-empty" data-search-empty data-i18n="search_empty">暂无匹配结果。</p>
 
       <section class="section intro-section" id="intro">
@@ -120,9 +118,16 @@
                   <span class="tab" data-i18n="tab_labs">labs</span>
                   <span class="tab" data-i18n="tab_field">field</span>
                 </div>
-            <div class="stack-body">
-              <h3 data-i18n="stack_title">Current focus</h3>
-              <p data-i18n="stack_desc">
+            <div class="stack-body feature-card">
+              <img
+                class="stack-cover"
+                src="./assets/cerda-1.jpg"
+                alt="Article cover"
+                loading="lazy"
+                data-feature-cover
+              />
+              <h3 data-i18n="stack_title" data-feature-title>Current focus</h3>
+              <p data-i18n="stack_desc" data-feature-desc>
                 Turning complex issues into trainable, discussable, reusable knowledge structures.
               </p>
               <a
@@ -131,10 +136,11 @@
                 target="_blank"
                 rel="noopener"
                 data-i18n="stack_link"
+                data-feature-link
               >
                 阅读文章
               </a>
-              <div class="tag-row">
+              <div class="tag-row" data-feature-tags>
                 <span class="tag">Casewriting</span>
                 <span class="tag">Systems</span>
                 <span class="tag">Clarity</span>

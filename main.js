@@ -14,6 +14,11 @@ const logoutBtn = document.querySelector("[data-logout-btn]");
 const authStatus = document.querySelector("[data-auth-status]");
 const authEmail = document.querySelector("[data-auth-email]");
 const adminOnlyEls = document.querySelectorAll("[data-admin-only]");
+const featureCover = document.querySelector("[data-feature-cover]");
+const featureTitle = document.querySelector("[data-feature-title]");
+const featureDesc = document.querySelector("[data-feature-desc]");
+const featureLink = document.querySelector("[data-feature-link]");
+const featureTags = document.querySelector("[data-feature-tags]");
 
 const SECTION_STATE_KEY = "sectionState";
 const CONTENT_URL = "./data/content.json";
@@ -294,6 +299,7 @@ const apiEndpoints = apiBase
       login: `${apiBase}/api/auth/google`,
       session: `${apiBase}/api/auth/session`,
       logout: `${apiBase}/api/auth/logout`,
+      og: `${apiBase}/api/og`,
     }
   : null;
 
@@ -338,6 +344,45 @@ function normalizeItem(item) {
   if (!item) return { id: String(Date.now()) };
   const id = item.id ? String(item.id) : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
   return { ...item, id };
+}
+
+function splitTags(value) {
+  if (!value) return [];
+  return value
+    .split(/[,/|·]+/g)
+    .map((tag) => tag.trim())
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+function updateFeaturedArticle() {
+  const item = contentState.articles && contentState.articles[0];
+  if (!item) return;
+
+  if (featureCover && item.cover) {
+    featureCover.src = item.cover;
+    featureCover.alt = item.title || \"Article cover\";
+  }
+  if (featureTitle && item.title) {
+    featureTitle.textContent = item.title;
+  }
+  if (featureDesc && item.desc) {
+    featureDesc.textContent = item.desc;
+  }
+  if (featureLink) {
+    featureLink.href = item.link || \"#\";
+  }
+  if (featureTags) {
+    featureTags.innerHTML = \"\";
+    const tags = splitTags(item.tag);
+    if (tags.length === 0) tags.push(\"Article\");
+    tags.forEach((tag) => {
+      const span = document.createElement(\"span\");
+      span.className = \"tag\";
+      span.textContent = tag;
+      featureTags.appendChild(span);
+    });
+  }
 }
 
 function applyTranslations() {
@@ -642,6 +687,7 @@ function renderContent() {
   updateEmptyStates();
   refreshSearchIndex();
   applySearchFilter();
+  updateFeaturedArticle();
 }
 
 function updateEmptyStates() {
@@ -728,6 +774,20 @@ async function fetchJson(url, options) {
     throw new Error(`Request failed: ${response.status}`);
   }
   return response.json();
+}
+
+async function fetchCoverFromLink(link) {
+  if (!apiEndpoints?.og || !link) return "";
+  try {
+    const response = await fetch(`${apiEndpoints.og}?url=${encodeURIComponent(link)}`, {
+      credentials: "include",
+    });
+    if (!response.ok) return "";
+    const data = await response.json();
+    return data.image || "";
+  } catch (error) {
+    return "";
+  }
 }
 
 async function loadContent() {
@@ -932,6 +992,12 @@ if (publishForm) {
     const item = buildItemFromForm(formData, existing);
     if (coverDataUrl) {
       item.cover = coverDataUrl;
+    }
+    if (!item.cover) {
+      const autoCover = await fetchCoverFromLink(link);
+      if (autoCover) {
+        item.cover = autoCover;
+      }
     }
 
     let nextContent = { ...contentState };
