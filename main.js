@@ -47,6 +47,7 @@ const translations = {
     nav_rec_videos: "推荐视频",
     nav_music: "音乐",
     nav_publish: "发布",
+    hero_pill_article: "Cerdà 文章",
     hero_title: "我把学习、研究与项目做成可交付的作品。",
     hero_lead:
       "聚焦教育/公益组织、辩论与伦理讨论，以及 AI 工具化工作流（Notion/自动化/产品化）。",
@@ -118,6 +119,7 @@ const translations = {
     search_hint: "输入关键词即可过滤",
     search_count: "匹配 {count} 条",
     search_empty: "暂无匹配结果。",
+    bottom_article_link: "阅读 Cerdà 文章",
     section_toggle_open: "展开",
     section_toggle_close: "收起",
     empty_articles: "暂无内容，可在发布中心添加。",
@@ -146,6 +148,7 @@ const translations = {
     nav_rec_videos: "Recommended Videos",
     nav_music: "Music",
     nav_publish: "Publish",
+    hero_pill_article: "Cerdà Article",
     hero_title: "I turn study, research, and projects into deliverables.",
     hero_lead:
       "Focused on education/public-good orgs, debate & ethics, and AI-enabled workflows (Notion/automation/productization).",
@@ -217,6 +220,7 @@ const translations = {
     search_hint: "Type to filter",
     search_count: "{count} results",
     search_empty: "No results found.",
+    bottom_article_link: "Read Cerdà article",
     section_toggle_open: "Expand",
     section_toggle_close: "Collapse",
     empty_articles: "No items yet. Add via Publish Center.",
