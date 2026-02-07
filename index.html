@@ -1,27 +1,345 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <title>Kaiyang | Personal Site</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0f172a, #020617);
-      color: white;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text";
-    }
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 600;
-    }
-  </style>
-</head>
-<body>
-  <h1>Hello, this is Kaiyang.</h1>
-</body>
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>你的名字 | 个人介绍</title>
+    <meta
+      name="description"
+      content="一个带点 Arc 气质、带点未来感的个人介绍主页。"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true">
+      <span class="orb orb--coral"></span>
+      <span class="orb orb--mint"></span>
+      <span class="orb orb--sun"></span>
+      <span class="grid"></span>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">KG</div>
+        <div>
+          <div class="brand-name">你的名字</div>
+          <div class="brand-role">Product Designer · Creative Engineer</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#about">关于</a>
+        <a href="#work">经历</a>
+        <a href="#projects">作品</a>
+        <a href="#notes">笔记</a>
+        <a href="#contact" class="nav-cta">打个招呼</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow">你好，我是你的名字</p>
+          <h1>
+            把复杂的产品做得像滑动标签页一样顺滑，
+            我喜欢让体验有“呼吸感”。
+          </h1>
+          <p class="lead">
+            我在意节奏、结构、情绪与细节之间的平衡。擅长把设计语言转化为可落地的前端系统，
+            让团队的每一次迭代都更轻盈。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">看作品</a>
+            <a class="button ghost" href="#contact">联系我</a>
+            <div class="status-pill">
+              <span class="dot"></span>
+              可合作 · 2026
+            </div>
+          </div>
+          <div class="quick-facts">
+            <div class="fact">
+              <span class="fact-label">基地</span>
+              <span>上海 · 远程</span>
+            </div>
+            <div class="fact">
+              <span class="fact-label">专注</span>
+              <span>AI 产品体验 / Design Ops</span>
+            </div>
+            <div class="fact">
+              <span class="fact-label">当下</span>
+              <span>构建可复用的交互叙事模版</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="window-card">
+            <div class="window-bar">
+              <span class="dot dot--red"></span>
+              <span class="dot dot--amber"></span>
+              <span class="dot dot--green"></span>
+              <div class="tabs">
+                <span class="tab active">profile</span>
+                <span class="tab">labs</span>
+                <span class="tab">now</span>
+              </div>
+            </div>
+            <div class="window-body">
+              <div class="window-split">
+                <div>
+                  <p class="window-title">正在做</p>
+                  <p class="window-text">
+                    用“轨迹 + 反馈 + 叙事”重新组织产品体验，
+                    让界面像音乐一样有层次。
+                  </p>
+                  <div class="chip-row">
+                    <span class="chip">Interface Rhythm</span>
+                    <span class="chip">Design Systems</span>
+                    <span class="chip">Motion Craft</span>
+                  </div>
+                </div>
+                <div class="mini-stack">
+                  <div class="stack-card">
+                    <p class="stack-title">现在在看</p>
+                    <p class="stack-text">Arc 浏览器 · Notion 日历 · Midjourney</p>
+                  </div>
+                  <div class="stack-card accent">
+                    <p class="stack-title">体验关键词</p>
+                    <p class="stack-text">轻盈、敏捷、情感化、可持续</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="floating-card floating-card--left">
+            <p class="floating-label">我在意的三件事</p>
+            <p class="floating-text">结构 · 情绪 · 自由度</p>
+          </div>
+          <div class="floating-card floating-card--right">
+            <p class="floating-label">最近更新</p>
+            <p class="floating-text">Arc 风格导航实验 2.0</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">关于我</p>
+            <h2>像制作一部短片那样设计产品。</h2>
+          </div>
+          <p class="section-lead">
+            我相信视觉不仅是表面，而是节奏、重心和共鸣的组合。日常把时间投入到
+            产品策略、设计系统与工程协作，让体验从 0 到 1 再到 10。
+          </p>
+        </div>
+        <div class="bento">
+          <article class="tile tile-wide">
+            <h3>设计观</h3>
+            <p>
+              想象你每次打开产品都像“开一个新标签页”，那种无负担、轻盈、
+              充满可能性的感觉。我的工作是让产品回到这种状态。
+            </p>
+          </article>
+          <article class="tile">
+            <h3>合作方式</h3>
+            <p>产品定义 · 体验策略 · 设计落地 · 设计系统</p>
+          </article>
+          <article class="tile">
+            <h3>偏好工具</h3>
+            <p>Figma · Framer · Webflow · React · Motion</p>
+          </article>
+          <article class="tile tile-tall">
+            <h3>在意的小细节</h3>
+            <p>空白、呼吸、滚动节奏、对比、质感、声量</p>
+          </article>
+          <article class="tile">
+            <h3>我是这样的</h3>
+            <p>更喜欢先做一个可以触摸的原型，再讨论愿景。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="work">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">经历</p>
+            <h2>把体验从“好看”推到“好用又难忘”。</h2>
+          </div>
+          <p class="section-lead">
+            多年的产品设计与创意工程经验，让我可以在抽象策略与细节落地之间自由切换。
+          </p>
+        </div>
+        <div class="timeline">
+          <article class="timeline-item">
+            <div class="timeline-meta">
+              <span>2023 — 现在</span>
+              <span>体验设计负责人</span>
+            </div>
+            <h3>Rivulet AI</h3>
+            <p>打造 AI 工作流产品，从 0 到 1 构建设计系统、交互规范与实验体系。</p>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-meta">
+              <span>2020 — 2023</span>
+              <span>资深产品设计师</span>
+            </div>
+            <h3>Cityworks Lab</h3>
+            <p>负责数据可视化平台与移动端体验，推动多端体验一致与品牌语言升级。</p>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-meta">
+              <span>2017 — 2020</span>
+              <span>交互与品牌设计</span>
+            </div>
+            <h3>Studio Axis</h3>
+            <p>与创意团队一起做跨媒体项目，探索视觉与交互之间更诗意的连接。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="projects">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">作品</p>
+            <h2>一些被我称为“新标签页”的项目。</h2>
+          </div>
+          <p class="section-lead">每个项目都试图让用户拥有更多自由度和节奏感。</p>
+        </div>
+        <div class="project-grid">
+          <article class="project-card">
+            <div class="project-top">
+              <h3>Arcflow Dashboard</h3>
+              <span class="badge">Web App</span>
+            </div>
+            <p>把分散的数据和动作整理成“流动的轨迹”，让人快速进入状态。</p>
+            <div class="tag-row">
+              <span class="tag">Product Design</span>
+              <span class="tag">Design System</span>
+              <span class="tag">Motion</span>
+            </div>
+          </article>
+          <article class="project-card">
+            <div class="project-top">
+              <h3>Pulseboard</h3>
+              <span class="badge">Research</span>
+            </div>
+            <p>一个以节奏驱动的工作台，用“情绪波动图”帮助团队保持共鸣。</p>
+            <div class="tag-row">
+              <span class="tag">UX Strategy</span>
+              <span class="tag">Service Design</span>
+              <span class="tag">Prototype</span>
+            </div>
+          </article>
+          <article class="project-card">
+            <div class="project-top">
+              <h3>Glow Notes</h3>
+              <span class="badge">Mobile</span>
+            </div>
+            <p>将知识整理变成一段“缓慢展开的旅程”，强调视觉层级与沉浸感。</p>
+            <div class="tag-row">
+              <span class="tag">iOS</span>
+              <span class="tag">Visual Language</span>
+              <span class="tag">System Mapping</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="notes">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">笔记</p>
+            <h2>最近在写的东西。</h2>
+          </div>
+          <p class="section-lead">记录一些关于设计与技术的观察。</p>
+        </div>
+        <div class="notes-grid">
+          <article class="note-card">
+            <p class="note-date">2026 / 01</p>
+            <h3>让界面像音乐一样有段落感</h3>
+            <p>谈谈节奏与留白如何影响复杂产品的可读性与掌控感。</p>
+          </article>
+          <article class="note-card">
+            <p class="note-date">2025 / 11</p>
+            <h3>设计系统不是 UI 组件库</h3>
+            <p>从语义、节奏、情绪三个维度重新拆解系统的意义。</p>
+          </article>
+          <article class="note-card">
+            <p class="note-date">2025 / 07</p>
+            <h3>构建一个可持续的互动叙事</h3>
+            <p>如何让产品的“故事感”能够随着版本更新不断延伸。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="contact-card">
+          <div>
+            <p class="eyebrow">联系我</p>
+            <h2>如果你正在做有趣的项目，我们可以聊聊。</h2>
+            <p class="section-lead">
+              邮箱与社交信息可以在这里找到。也可以直接复制邮箱。
+            </p>
+          </div>
+          <div class="contact-actions">
+            <a class="button primary" href="mailto:hello@yourname.studio"
+              >hello@yourname.studio</a
+            >
+            <button class="button ghost" type="button" data-copy>
+              复制邮箱
+            </button>
+            <div class="socials">
+              <a href="#">Behance</a>
+              <a href="#">LinkedIn</a>
+              <a href="#">微博</a>
+              <a href="#">即刻</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <span>© 2026 你的名字</span>
+        <span class="divider">·</span>
+        <span>现在时间 <strong data-local-time></strong></span>
+      </div>
+      <span>Made with clarity & rhythm.</span>
+    </footer>
+
+    <script>
+      const timeEl = document.querySelector("[data-local-time]");
+      const copyBtn = document.querySelector("[data-copy]");
+      const email = "hello@yourname.studio";
+
+      function updateTime() {
+        if (!timeEl) return;
+        const now = new Date();
+        timeEl.textContent = now.toLocaleTimeString("zh-CN", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      updateTime();
+      if (timeEl) {
+        setInterval(updateTime, 1000 * 30);
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(email);
+            copyBtn.textContent = "已复制";
+            setTimeout(() => {
+              copyBtn.textContent = "复制邮箱";
+            }, 1800);
+          } catch (error) {
+            window.location.href = `mailto:${email}`;
+          }
+        });
+      }
+    </script>
+  </body>
 </html>
