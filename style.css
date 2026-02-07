@@ -405,6 +405,20 @@ main {
   line-height: 1.6;
 }
 
+.stack-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.stack-link::after {
+  content: "↗";
+  font-size: 12px;
+}
+
 .tag-row {
   display: flex;
   flex-wrap: wrap;
