@@ -17,6 +17,7 @@ const adminOnlyEls = document.querySelectorAll("[data-admin-only]");
 
 const SECTION_STATE_KEY = "sectionState";
 const CONTENT_URL = "./data/content.json";
+const CONTENT_BACKUP_KEY = "contentBackup";
 
 const DEFAULT_CONTENT = {
   articles: [
@@ -41,6 +42,7 @@ let currentLang;
 let sectionState = JSON.parse(localStorage.getItem(SECTION_STATE_KEY) || "{}");
 let editState = null;
 let authState = { available: false, admin: false, email: "" };
+let backupSyncAttempted = false;
 
 const translations = {
   zh: {
@@ -111,6 +113,7 @@ const translations = {
     publish_error: "同步失败，请稍后再试。",
     publish_need_login: "请先登录管理员账户。",
     publish_cover_too_large: "封面文件过大，请小于 1.5MB。",
+    publish_syncing: "检测到未同步内容，正在自动同步...",
     section_articles_label: "文章",
     section_articles_title: "文章分享",
     section_articles_lead: "选择性发布的阅读与研究片段。",
@@ -227,6 +230,7 @@ const translations = {
     publish_error: "Sync failed. Try again.",
     publish_need_login: "Please sign in as admin first.",
     publish_cover_too_large: "Cover file is too large. Please keep it under 1.5MB.",
+    publish_syncing: "Unsynced content detected. Syncing now...",
     section_articles_label: "Articles",
     section_articles_title: "Article Share",
     section_articles_lead: "Selected reading and research excerpts.",
@@ -338,6 +342,37 @@ function normalizeItem(item) {
   if (!item) return { id: String(Date.now()) };
   const id = item.id ? String(item.id) : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
   return { ...item, id };
+}
+
+function saveBackup(data) {
+  try {
+    localStorage.setItem(
+      CONTENT_BACKUP_KEY,
+      JSON.stringify({ savedAt: Date.now(), data })
+    );
+  } catch (error) {
+    // ignore storage errors
+  }
+}
+
+function loadBackup() {
+  const raw = localStorage.getItem(CONTENT_BACKUP_KEY);
+  if (!raw) return null;
+  try {
+    const payload = JSON.parse(raw);
+    if (!payload || !payload.data) return null;
+    return payload;
+  } catch (error) {
+    return null;
+  }
+}
+
+function clearBackup() {
+  try {
+    localStorage.removeItem(CONTENT_BACKUP_KEY);
+  } catch (error) {
+    // ignore
+  }
 }
 
 function applyTranslations() {
@@ -800,10 +835,12 @@ async function syncContentUpdate(nextContent) {
     renderContent();
     setEditState(null, null);
     setPublishStatus(dict.publish_saved, "success");
+    clearBackup();
   } catch (error) {
     contentState = normalizeContent(nextContent);
     renderContent();
     setPublishStatus(dict.publish_error, "error");
+    saveBackup(nextContent);
   }
 }
 
@@ -824,6 +861,24 @@ async function initAuth() {
   }
   updateAuthUI();
   renderContent();
+
+  if (authState.admin && !backupSyncAttempted) {
+    backupSyncAttempted = true;
+    const backup = loadBackup();
+    if (backup && backup.data) {
+      const dict = getDict();
+      setPublishStatus(dict.publish_syncing || "Syncing...", null, true);
+      try {
+        const saved = await saveContent(backup.data);
+        contentState = normalizeContent(saved);
+        renderContent();
+        clearBackup();
+        setPublishStatus(dict.publish_saved, "success");
+      } catch (error) {
+        setPublishStatus(dict.publish_error, "error");
+      }
+    }
+  }
 }
 
 async function init() {
