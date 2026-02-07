@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-Hans">
+<html lang="zh-Hans" data-title-key="title">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kling | 个人介绍</title>
     <meta
       name="description"
-      content="Kling 的个人介绍主页，轻盈、叙事、分层标签页风格。"
+      content="Kling 的个人介绍主页，文章分享 + 音乐分享 + 推荐内容。"
     />
     <link rel="stylesheet" href="./style.css" />
   </head>
@@ -20,270 +20,368 @@
 
     <header class="site-header">
       <div class="header-left">
-        <span class="status"><span class="dot"></span>Online</span>
-        <button class="chip-btn" type="button" data-theme-toggle>Theme: Light</button>
+        <span class="status">
+          <span class="dot"></span>
+          <span data-i18n="status_online">Online</span>
+        </span>
+        <div class="header-actions">
+          <button class="chip-btn" type="button" data-theme-toggle>Theme: Light</button>
+          <button class="chip-btn" type="button" data-lang-toggle>中文 / EN</button>
+        </div>
       </div>
       <div class="brand">Kling</div>
       <nav class="header-nav">
-        <a href="#now">Now</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#notes">Notes</a>
-        <a class="nav-cta" href="#contact">Contact</a>
+        <a href="#intro" data-i18n="nav_intro">Intro</a>
+        <a href="#articles" data-i18n="nav_articles">Articles</a>
+        <a href="#rec-articles" data-i18n="nav_rec_articles">Recommended</a>
+        <a href="#rec-videos" data-i18n="nav_rec_videos">Videos</a>
+        <a href="#music" data-i18n="nav_music">Music</a>
+        <a class="nav-cta" href="#publish" data-i18n="nav_publish">Publish</a>
       </nav>
     </header>
 
     <main>
-      <section class="hero" id="home">
-        <div class="hero-text" data-reveal>
-          <div class="hero-pills">
-            <span class="pill">Kling Gu</span>
-            <span class="pill">G10 · China</span>
-            <span class="pill">Ethics Bowl</span>
+      <div class="search-bar" data-reveal>
+        <input
+          type="search"
+          class="search-input"
+          data-search
+          data-i18n-placeholder="search_placeholder"
+          placeholder="搜索文章 / 视频 / 音乐"
+        />
+        <span class="search-tip" data-i18n="search_hint">输入关键词即可过滤</span>
+      </div>
+      <p class="empty-state search-empty" data-search-empty data-i18n="search_empty">暂无匹配结果。</p>
+
+      <section class="section intro-section" id="intro">
+        <div class="section-head">
+          <div>
+            <p class="section-label" data-i18n="section_intro_label">Intro</p>
+            <h2 data-i18n="section_intro_title">个人简介</h2>
           </div>
-          <h1>我把学习、研究与项目做成可交付的作品。</h1>
-          <p class="lead">
-            聚焦教育/公益组织、辩论与伦理讨论，以及 AI 工具化工作流（Notion/自动化/产品化）。
+          <p class="section-lead" data-i18n="section_intro_lead">
+            三句话说明你在做什么、关心什么、产出什么。
           </p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#projects">看作品</a>
-            <a class="btn ghost" href="#contact">Email me</a>
-          </div>
-          <div class="hero-meta">
-            <div class="meta-card">
-              <span class="meta-label">现在在做</span>
-              <span>Ethics Bowl 案例集与训练体系</span>
-            </div>
-            <div class="meta-card">
-              <span class="meta-label">兴趣方向</span>
-              <span>Debate · Ethics · Community</span>
-            </div>
-            <div class="meta-card">
-              <span class="meta-label">工具控</span>
-              <span>Notion · Automation · Research</span>
-            </div>
+          <div class="section-tools">
+            <button class="chip-btn" type="button" data-section-toggle data-target="intro">
+              收起
+            </button>
           </div>
         </div>
-
-        <div class="hero-visual" data-reveal>
-          <div class="stack-card">
-            <div class="stack-tabs">
-              <span class="tab active">profile</span>
-              <span class="tab">labs</span>
-              <span class="tab">field</span>
+        <div class="section-body" data-section-body="intro">
+          <div class="hero">
+            <div class="hero-text" data-reveal>
+              <div class="hero-pills">
+                <span class="pill">Kling Gu</span>
+                <span class="pill">G10 · China</span>
+                <span class="pill">Ethics Bowl</span>
+              </div>
+              <h1 data-i18n="hero_title">我把学习、研究与项目做成可交付的作品。</h1>
+              <p class="lead" data-i18n="hero_lead">
+                聚焦教育/公益组织、辩论与伦理讨论，以及 AI 工具化工作流（Notion/自动化/产品化）。
+              </p>
+              <div class="hero-actions">
+                <a class="btn primary" href="#articles" data-i18n="hero_cta_work">文章分享</a>
+                <a class="btn ghost" href="#music" data-i18n="hero_cta_email">音乐分享</a>
+              </div>
+              <div class="hero-meta">
+                <div class="meta-card">
+                  <span class="meta-label" data-i18n="meta_now_label">现在在做</span>
+                  <span class="meta-value" data-i18n="meta_now_value">Ethics Bowl 案例集与训练体系</span>
+                </div>
+                <div class="meta-card">
+                  <span class="meta-label" data-i18n="meta_interest_label">兴趣方向</span>
+                  <span class="meta-value" data-i18n="meta_interest_value">Debate · Ethics · Community</span>
+                </div>
+                <div class="meta-card">
+                  <span class="meta-label" data-i18n="meta_tools_label">工具控</span>
+                  <span class="meta-value" data-i18n="meta_tools_value">Notion · Automation · Research</span>
+                </div>
+              </div>
             </div>
-            <div class="stack-body">
-              <h3>现在的重点</h3>
-              <p>把复杂议题整理成可训练、可讨论、可复用的知识结构。</p>
-              <div class="tag-row">
-                <span class="tag">Casewriting</span>
-                <span class="tag">Systems</span>
-                <span class="tag">Clarity</span>
+
+            <div class="hero-visual" data-reveal>
+              <div class="stack-card">
+                <div class="stack-tabs">
+                  <span class="tab active" data-i18n="tab_profile">profile</span>
+                  <span class="tab" data-i18n="tab_labs">labs</span>
+                  <span class="tab" data-i18n="tab_field">field</span>
+                </div>
+                <div class="stack-body">
+                  <h3 data-i18n="stack_title">现在的重点</h3>
+                  <p data-i18n="stack_desc">把复杂议题整理成可训练、可讨论、可复用的知识结构。</p>
+                  <div class="tag-row">
+                    <span class="tag">Casewriting</span>
+                    <span class="tag">Systems</span>
+                    <span class="tag">Clarity</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mini-card">
+                <span class="mini-label" data-i18n="latest_label">Latest</span>
+                <p data-i18n="latest_text">China Ethics Bowl 落地尝试中</p>
               </div>
             </div>
           </div>
-          <div class="mini-card">
-            <span class="mini-label">Latest</span>
-            <p>China Ethics Bowl 落地尝试中</p>
-          </div>
-        </div>
-      </section>
 
-      <section class="section" id="now" data-reveal>
-        <div class="section-head">
-          <div>
-            <p class="section-label">Now</p>
-            <h2>我现在在做的事</h2>
-          </div>
-          <p class="section-lead">每一块都尽量保持轻量，但能直接变成产出。</p>
-        </div>
-        <div class="bento">
-          <article class="card span-7">
-            <h3>Ethics Bowl（伦理碗）</h3>
-            <p>准备 2026 赛季案例集与训练体系，偏“中国现实议题”。</p>
-            <div class="tag-row">
-              <span class="tag">Ethics</span>
-              <span class="tag">Debate</span>
-              <span class="tag">Casewriting</span>
+          <div class="contact-card" data-reveal>
+            <div>
+              <p class="section-label" data-i18n="section_contact_label">Contact</p>
+              <h2 data-i18n="section_contact_title">如果你正在做有趣的项目，我们可以聊聊。</h2>
+              <p class="section-lead" data-i18n="section_contact_lead">社交链接先占位，邮箱已开放。</p>
             </div>
-          </article>
-          <article class="card">
-            <h3>中国 Ethics Bowl 落地</h3>
-            <p>对接国外团队支持，希望在中国举办更规范的比赛。</p>
-            <div class="tag-row">
-              <span class="tag">Partnership</span>
-              <span class="tag">Event</span>
-              <span class="tag">Community</span>
-            </div>
-          </article>
-          <article class="card">
-            <h3>志愿者翻译群体（深圳）</h3>
-            <p>搭建公益翻译协作网络，为社区/公益/国际交流提供语言支持。</p>
-            <div class="tag-row">
-              <span class="tag">Volunteer</span>
-              <span class="tag">Translation</span>
-              <span class="tag">Ops</span>
-            </div>
-          </article>
-          <article class="card">
-            <h3>学习主线</h3>
-            <p>AP Euro 系统学习中，同时做结构化笔记与复盘。</p>
-            <div class="tag-row">
-              <span class="tag">AP</span>
-              <span class="tag">Notes</span>
-              <span class="tag">Systems</span>
-            </div>
-          </article>
-          <article class="card">
-            <h3>AI 工作流与工具</h3>
-            <p>搭建 Notion 工作台、自动化与浏览器效率工具。</p>
-            <div class="tag-row">
-              <span class="tag">AI</span>
-              <span class="tag">Notion</span>
-              <span class="tag">Automation</span>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="experience" data-reveal>
-        <div class="section-head">
-          <div>
-            <p class="section-label">Experience</p>
-            <h2>少而准的经历</h2>
-          </div>
-          <p class="section-lead">把每一段经历当成一页标签页。</p>
-        </div>
-        <div class="timeline">
-          <article class="timeline-item">
-            <div class="timeline-meta">
-              <span>International School Student（G10）</span>
-              <span>China</span>
-            </div>
-            <p>以 AP 学科为主线，训练结构化写作与论证能力（AP Euro / 伦理讨论）。</p>
-          </article>
-          <article class="timeline-item">
-            <div class="timeline-meta">
-              <span>Ethics Bowl Preparation & Casewriting</span>
-              <span>2025–2026</span>
-            </div>
-            <p>构建案例集、训练流程与赛制理解；目标是可复制的训练体系。</p>
-          </article>
-          <article class="timeline-item">
-            <div class="timeline-meta">
-              <span>Volunteer Translation Initiative（筹备）</span>
-              <span>South China</span>
-            </div>
-            <p>搭建协作流程、招募与质量控制，面向公益与社区活动提供语言支持。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="projects" data-reveal>
-        <div class="section-head">
-          <div>
-            <p class="section-label">Projects</p>
-            <h2>作品与可交付物</h2>
-          </div>
-          <p class="section-lead">卡片 + 轻叙事。</p>
-        </div>
-        <div class="card-grid">
-          <article class="card stack">
-            <div class="card-top">
-              <h3>Ethics Bowl Casebook (CN Focus)</h3>
-              <span class="badge">Casebook</span>
-            </div>
-            <p>把现实争议写成可比赛、可训练的案例集。</p>
-            <p class="meta">我做的：选题、结构模板、争议点提炼、训练问题设计。</p>
-            <p class="meta">产出：案例集（文档/Notion 页面链接位）</p>
-            <div class="card-actions">
-              <a class="btn ghost" href="#">View</a>
-              <a class="btn ghost" href="#">Notes</a>
-            </div>
-          </article>
-          <article class="card stack">
-            <div class="card-top">
-              <h3>Volunteer Translator Network (Shenzhen)</h3>
-              <span class="badge">Community</span>
-            </div>
-            <p>把“临时志愿者”变成可持续协作的翻译小队。</p>
-            <p class="meta">我做的：流程设计、招募规则、质检机制与协作规范。</p>
-            <p class="meta">产出：招募页/流程图/规范文档链接位</p>
-            <div class="card-actions">
-              <a class="btn ghost" href="#">View</a>
-              <a class="btn ghost" href="#">Repo</a>
-            </div>
-          </article>
-          <article class="card stack">
-            <div class="card-top">
-              <h3>Study + AI Workflow System</h3>
-              <span class="badge">System</span>
-            </div>
-            <p>用 Notion + 自动化把学习变成可追踪的系统。</p>
-            <p class="meta">我做的：仪表盘结构、任务流、复盘模板、资料归档规则。</p>
-            <p class="meta">产出：模板/截图/演示链接位</p>
-            <div class="card-actions">
-              <a class="btn ghost" href="#">View</a>
-              <a class="btn ghost" href="#">Demo</a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="notes" data-reveal>
-        <div class="section-head">
-          <div>
-            <p class="section-label">Notes</p>
-            <h2>Field Notes</h2>
-          </div>
-          <p class="section-lead">记录学习与项目过程的可复用片段。</p>
-        </div>
-        <div class="notes">
-          <article class="note">
-            <span class="note-date">2026 / 01</span>
-            <h3>让界面像音乐一样有段落感</h3>
-            <p>关于节奏、留白与复杂信息的可读性。</p>
-          </article>
-          <article class="note">
-            <span class="note-date">2025 / 11</span>
-            <h3>设计系统不是 UI 组件库</h3>
-            <p>从语义、节奏、情绪重新拆解系统的意义。</p>
-          </article>
-          <article class="note">
-            <span class="note-date">2025 / 07</span>
-            <h3>构建一个可持续的互动叙事</h3>
-            <p>让产品的“故事感”能够持续迭代。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="contact" data-reveal>
-        <div class="contact-card">
-          <div>
-            <p class="section-label">Contact</p>
-            <h2>如果你正在做有趣的项目，我们可以聊聊。</h2>
-            <p class="section-lead">先用占位链接，后续我再补齐真实地址。</p>
-          </div>
-          <div class="contact-actions">
-            <a class="btn primary" href="mailto:hello@kling.studio">Email me</a>
-            <button class="btn ghost" type="button" data-copy data-email="hello@kling.studio">
-              Copy email
-            </button>
+            <div class="contact-actions">
+              <a class="btn primary" href="mailto:kaiyanggu13@gmail.com" data-i18n="contact_email">
+                Email me
+              </a>
+              <button
+                class="btn ghost"
+                type="button"
+                data-copy
+                data-email="kaiyanggu13@gmail.com"
+                data-i18n="contact_copy"
+              >
+                Copy email
+              </button>
             <div class="socials">
-              <a href="#">Email</a>
-              <a href="#">GitHub</a>
-              <a href="#">Notion</a>
-              <a href="#">X</a>
-              <a href="#">LinkedIn</a>
+              <a href="mailto:kaiyanggu13@gmail.com">Gmail</a>
+              <a href="https://x.com/kling_gu" target="_blank" rel="noopener">X</a>
+            </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="section" id="publish">
+        <div class="section-head">
+          <div>
+            <p class="section-label" data-i18n="section_publish_label">Publish</p>
+            <h2 data-i18n="section_publish_title">发布中心</h2>
+          </div>
+          <p class="section-lead" data-i18n="section_publish_lead">
+            在页面内直接发布文章、视频与音乐推荐。
+          </p>
+          <div class="section-tools">
+            <button class="chip-btn" type="button" data-section-toggle data-target="publish">
+              收起
+            </button>
+          </div>
+        </div>
+        <div class="section-body" data-section-body="publish">
+          <form class="publish-form" data-publish-form>
+            <div class="form-field">
+              <label class="form-label" data-i18n="publish_section_label">选择板块</label>
+              <select name="section" required>
+                <option value="articles" data-i18n="publish_section_articles">文章分享</option>
+                <option value="recArticles" data-i18n="publish_section_rec_articles">推荐文章</option>
+                <option value="recVideos" data-i18n="publish_section_rec_videos">推荐视频</option>
+                <option value="music" data-i18n="publish_section_music">音乐分享</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" data-i18n="publish_title_label">标题</label>
+              <input
+                type="text"
+                name="title"
+                data-i18n-placeholder="publish_title_placeholder"
+                placeholder="标题"
+                required
+              />
+            </div>
+            <div class="form-field full">
+              <label class="form-label" data-i18n="publish_desc_label">内容</label>
+              <textarea
+                name="desc"
+                rows="3"
+                data-i18n-placeholder="publish_desc_placeholder"
+                placeholder="一句话简介"
+                required
+              ></textarea>
+            </div>
+            <div class="form-field">
+              <label class="form-label" data-i18n="publish_link_label">链接</label>
+              <input
+                type="url"
+                name="link"
+                data-i18n-placeholder="publish_link_placeholder"
+                placeholder="https://"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label class="form-label" data-i18n="publish_tag_label">标签</label>
+              <input
+                type="text"
+                name="tag"
+                data-i18n-placeholder="publish_tag_placeholder"
+                placeholder="可选"
+              />
+            </div>
+            <div class="form-field">
+              <label class="form-label" data-i18n="publish_cover_url_label">封面图 URL</label>
+              <input
+                type="url"
+                name="coverUrl"
+                data-i18n-placeholder="publish_cover_url_placeholder"
+                placeholder="https://"
+              />
+            </div>
+            <div class="form-field">
+              <label class="form-label" data-i18n="publish_cover_file_label">上传封面</label>
+              <input type="file" name="coverFile" accept="image/*" />
+            </div>
+            <div class="form-actions full">
+              <button class="btn primary" type="submit" data-i18n="publish_submit">发布</button>
+              <button class="btn ghost" type="button" data-reset-form data-i18n="publish_reset">
+                清空
+              </button>
+            </div>
+          </form>
+          <p class="publish-hint" data-i18n="publish_hint">内容仅保存在本地浏览器。</p>
+        </div>
+      </section>
+
+      <section class="section" id="articles">
+        <div class="section-head">
+          <div>
+            <p class="section-label" data-i18n="section_articles_label">Articles</p>
+            <h2 data-i18n="section_articles_title">文章分享</h2>
+          </div>
+          <p class="section-lead" data-i18n="section_articles_lead">
+            选择性发布的阅读与研究片段。
+          </p>
+          <div class="section-tools">
+            <button class="chip-btn" type="button" data-section-toggle data-target="articles">
+              收起
+            </button>
+          </div>
+        </div>
+        <div class="section-body" data-section-body="articles">
+          <div class="card-grid" data-section-list="articles">
+            <article class="card stack content-card searchable-card" data-searchable>
+              <div class="card-top">
+                <h3 data-i18n="proj4_title">Cerdà's Vision of Barcelona Today</h3>
+                <span class="badge" data-i18n="proj4_badge">Urban Study</span>
+              </div>
+              <p data-i18n="proj4_desc">关于 19 世纪 Eixample 规划与当代城市问题的短文。</p>
+              <p class="meta" data-i18n="proj4_meta1">简介：回顾 Cerdà 规划理念及其在今日的张力。</p>
+              <p class="meta" data-i18n="proj4_meta2">形式：在线阅读文章（非 PDF）。</p>
+              <div class="card-actions">
+                <a class="btn ghost" href="./cerda-vision.html" data-i18n="action_read">Read</a>
+              </div>
+            </article>
+          </div>
+          <p class="empty-state" data-empty-for="articles" data-i18n="empty_articles">
+            暂无内容，可在发布中心添加。
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="rec-articles">
+        <div class="section-head">
+          <div>
+            <p class="section-label" data-i18n="section_rec_articles_label">Recommended</p>
+            <h2 data-i18n="section_rec_articles_title">推荐文章</h2>
+          </div>
+          <p class="section-lead" data-i18n="section_rec_articles_lead">
+            我近期想分享给朋友的文章。
+          </p>
+          <div class="section-tools">
+            <button class="chip-btn" type="button" data-section-toggle data-target="rec-articles">
+              收起
+            </button>
+          </div>
+        </div>
+        <div class="section-body" data-section-body="rec-articles">
+          <div class="card-grid" data-section-list="recArticles"></div>
+          <p class="empty-state" data-empty-for="recArticles" data-i18n="empty_rec_articles">
+            暂无推荐文章。
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="rec-videos">
+        <div class="section-head">
+          <div>
+            <p class="section-label" data-i18n="section_rec_videos_label">Recommended</p>
+            <h2 data-i18n="section_rec_videos_title">推荐视频</h2>
+          </div>
+          <p class="section-lead" data-i18n="section_rec_videos_lead">
+            带来启发的讲座、纪录片或访谈。
+          </p>
+          <div class="section-tools">
+            <button class="chip-btn" type="button" data-section-toggle data-target="rec-videos">
+              收起
+            </button>
+          </div>
+        </div>
+        <div class="section-body" data-section-body="rec-videos">
+          <div class="card-grid" data-section-list="recVideos"></div>
+          <p class="empty-state" data-empty-for="recVideos" data-i18n="empty_rec_videos">
+            暂无推荐视频。
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="music">
+        <div class="section-head">
+          <div>
+            <p class="section-label" data-i18n="section_music_label">Music</p>
+            <h2 data-i18n="section_music_title">音乐分享</h2>
+          </div>
+          <p class="section-lead" data-i18n="section_music_lead">
+            写作、思考与放空时的声音库存。
+          </p>
+          <div class="section-tools">
+            <button class="chip-btn" type="button" data-section-toggle data-target="music">
+              收起
+            </button>
+          </div>
+        </div>
+        <div class="section-body" data-section-body="music">
+          <div class="music-grid" data-section-list="music">
+            <article class="music-card content-card searchable-card" data-searchable>
+              <div class="music-top">
+                <h3 data-i18n="music1_title">Late Night Focus</h3>
+                <span class="badge" data-i18n="music1_badge">Playlist</span>
+              </div>
+              <p data-i18n="music1_desc">安静、有结构的氛围音，适合深度阅读。</p>
+              <div class="music-meta">
+                <span data-i18n="music1_meta">Ambient · Minimal</span>
+                <a class="btn ghost" href="#" data-i18n="music_action">Listen</a>
+              </div>
+            </article>
+            <article class="music-card content-card searchable-card" data-searchable>
+              <div class="music-top">
+                <h3 data-i18n="music2_title">City Walk</h3>
+                <span class="badge" data-i18n="music2_badge">Set</span>
+              </div>
+              <p data-i18n="music2_desc">有一点律动的城市漫步配乐。</p>
+              <div class="music-meta">
+                <span data-i18n="music2_meta">Electronic · Jazz</span>
+                <a class="btn ghost" href="#" data-i18n="music_action">Listen</a>
+              </div>
+            </article>
+            <article class="music-card content-card searchable-card" data-searchable>
+              <div class="music-top">
+                <h3 data-i18n="music3_title">Storywriting</h3>
+                <span class="badge" data-i18n="music3_badge">Loop</span>
+              </div>
+              <p data-i18n="music3_desc">写作时反复循环的小段落。</p>
+              <div class="music-meta">
+                <span data-i18n="music3_meta">Piano · Strings</span>
+                <a class="btn ghost" href="#" data-i18n="music_action">Listen</a>
+              </div>
+            </article>
+          </div>
+          <p class="empty-state" data-empty-for="music" data-i18n="empty_music">暂无音乐。</p>
         </div>
       </section>
     </main>
 
     <footer class="footer">
-      <span>© 2026 Kling</span>
-      <span>Made with clarity & rhythm.</span>
+      <span data-i18n="footer_left">© 2026 Kling</span>
+      <span data-i18n="footer_right">Made with clarity & rhythm.</span>
     </footer>
 
     <script src="./main.js"></script>
