@@ -8,6 +8,7 @@
       name="description"
       content="Kling 的个人介绍主页，文章分享 + 音乐分享 + 推荐内容。"
     />
+    <meta name="api-base" content="" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -120,8 +121,10 @@
                   <span class="tab" data-i18n="tab_field">field</span>
                 </div>
             <div class="stack-body">
-              <h3 data-i18n="stack_title">Cerdà's Vision of Barcelona Today</h3>
-              <p data-i18n="stack_desc">关于 19 世纪 Eixample 规划与当代城市问题的短文。</p>
+              <h3 data-i18n="stack_title">Current focus</h3>
+              <p data-i18n="stack_desc">
+                Turning complex issues into trainable, discussable, reusable knowledge structures.
+              </p>
               <a
                 class="stack-link"
                 href="https://kg081008.github.io/kaiyang/cerda-vision.html"
@@ -132,9 +135,9 @@
                 阅读文章
               </a>
               <div class="tag-row">
-                <span class="tag">Urban</span>
-                <span class="tag">Barcelona</span>
-                <span class="tag">Eixample</span>
+                <span class="tag">Casewriting</span>
+                <span class="tag">Systems</span>
+                <span class="tag">Clarity</span>
               </div>
             </div>
               </div>
@@ -163,7 +166,26 @@
           </div>
         </div>
         <div class="section-body" data-section-body="publish">
-          <form class="publish-form" data-publish-form>
+          <div class="auth-panel" data-auth-panel>
+            <div>
+              <p class="section-label" data-i18n="auth_label">Admin</p>
+              <h3 data-i18n="auth_title">管理员登录</h3>
+              <p class="section-lead" data-i18n="auth_lead">使用 Google 登录后即可发布并自动同步。</p>
+            </div>
+            <div class="auth-actions">
+              <button class="btn primary" type="button" data-login-btn data-i18n="auth_login">
+                Google 登录
+              </button>
+              <button class="btn ghost" type="button" data-logout-btn data-i18n="auth_logout" hidden>
+                退出登录
+              </button>
+              <div class="auth-meta">
+                <span class="auth-status" data-auth-status>未登录</span>
+                <span class="auth-email" data-auth-email></span>
+              </div>
+            </div>
+          </div>
+          <form class="publish-form admin-only" data-publish-form data-admin-only hidden>
             <div class="form-field">
               <label class="form-label" data-i18n="publish_section_label">选择板块</label>
               <select name="section" required>
@@ -232,16 +254,10 @@
               </button>
             </div>
           </form>
-          <div class="publish-tools">
-            <button class="btn ghost" type="button" data-export-content data-i18n="publish_export">
-              导出 content.json
-            </button>
-            <label class="btn ghost file-btn">
-              <span data-i18n="publish_import">导入 content.json</span>
-              <input type="file" data-import-content accept="application/json" />
-            </label>
-          </div>
-          <p class="publish-hint" data-i18n="publish_hint">内容仅保存在本地浏览器。</p>
+          <p class="publish-status" data-publish-status></p>
+          <p class="publish-hint" data-i18n="publish_hint">
+            登录后发布内容会自动同步到 GitHub Pages。
+          </p>
         </div>
       </section>
 

@@ -8,13 +8,14 @@ const searchEmpty = document.querySelector("[data-search-empty]");
 const searchCount = document.querySelector("[data-search-count]");
 const publishForm = document.querySelector("[data-publish-form]");
 const resetFormBtn = document.querySelector("[data-reset-form]");
-const exportBtn = document.querySelector("[data-export-content]");
-const importInput = document.querySelector("[data-import-content]");
+const publishStatus = document.querySelector("[data-publish-status]");
+const loginBtn = document.querySelector("[data-login-btn]");
+const logoutBtn = document.querySelector("[data-logout-btn]");
+const authStatus = document.querySelector("[data-auth-status]");
+const authEmail = document.querySelector("[data-auth-email]");
+const adminOnlyEls = document.querySelectorAll("[data-admin-only]");
 
-const STORAGE_KEY = "userContent";
 const SECTION_STATE_KEY = "sectionState";
-const HIDDEN_KEY = "hiddenContent";
-const CONTENT_OVERRIDE_KEY = "contentOverride";
 const CONTENT_URL = "./data/content.json";
 
 const DEFAULT_CONTENT = {
@@ -24,7 +25,7 @@ const DEFAULT_CONTENT = {
       title: "Cerdà's Vision of Barcelona Today",
       desc: "关于 19 世纪 Eixample 规划与当代城市问题的短文。",
       tag: "Urban Study",
-      link: "./cerda-vision.html",
+      link: "https://kg081008.github.io/kaiyang/cerda-vision.html",
       cover: "./assets/cerda-1.jpg",
       meta: ["简介：回顾 Cerdà 规划理念及其在今日的张力。", "形式：在线阅读文章（非 PDF）。"],
     },
@@ -34,7 +35,12 @@ const DEFAULT_CONTENT = {
   music: [],
 };
 
-let baseContent = { ...DEFAULT_CONTENT };
+let contentState = normalizeContent(DEFAULT_CONTENT);
+let currentTheme;
+let currentLang;
+let sectionState = JSON.parse(localStorage.getItem(SECTION_STATE_KEY) || "{}");
+let editState = null;
+let authState = { available: false, admin: false, email: "" };
 
 const translations = {
   zh: {
@@ -49,8 +55,7 @@ const translations = {
     nav_publish: "发布",
     hero_pill_article: "Cerdà 文章",
     hero_title: "我把学习、研究与项目做成可交付的作品。",
-    hero_lead:
-      "聚焦教育/公益组织、辩论与伦理讨论，以及 AI 工具化工作流（Notion/自动化/产品化）。",
+    hero_lead: "聚焦教育/公益组织、辩论与伦理讨论，以及 AI 工具化工作流（Notion/自动化/产品化）。",
     hero_cta_work: "文章分享",
     hero_cta_email: "音乐分享",
     meta_now_label: "现在在做",
@@ -59,11 +64,11 @@ const translations = {
     meta_interest_value: "Debate · Ethics · Community",
     meta_tools_label: "工具控",
     meta_tools_value: "Notion · Automation · Research",
-    tab_profile: "简介",
-    tab_labs: "实验",
-    tab_field: "实地",
-    stack_title: "Cerdà's Vision of Barcelona Today",
-    stack_desc: "关于 19 世纪 Eixample 规划与当代城市问题的短文。",
+    tab_profile: "Profile",
+    tab_labs: "Labs",
+    tab_field: "Field",
+    stack_title: "Current focus",
+    stack_desc: "把复杂议题转化为可训练、可讨论、可复用的知识结构。",
     stack_link: "阅读文章",
     latest_label: "最新",
     latest_text: "China Ethics Bowl 落地尝试中",
@@ -73,6 +78,14 @@ const translations = {
     section_publish_label: "发布",
     section_publish_title: "发布中心",
     section_publish_lead: "在页面内直接发布文章、视频与音乐推荐。",
+    auth_label: "管理员",
+    auth_title: "管理员登录",
+    auth_lead: "使用 Google 登录后即可发布并自动同步。",
+    auth_login: "Google 登录",
+    auth_logout: "退出登录",
+    auth_status_guest: "未登录",
+    auth_status_admin: "已登录（管理员）",
+    auth_status_unavailable: "未配置登录",
     publish_section_label: "选择板块",
     publish_section_articles: "文章分享",
     publish_section_rec_articles: "推荐文章",
@@ -90,10 +103,14 @@ const translations = {
     publish_cover_url_placeholder: "https://",
     publish_cover_file_label: "上传封面",
     publish_submit: "发布",
+    publish_update: "更新",
     publish_reset: "清空",
-    publish_export: "导出 content.json",
-    publish_import: "导入 content.json",
-    publish_hint: "导出后替换 data/content.json 并推送到 GitHub，全站同步。",
+    publish_hint: "登录后发布内容会自动同步到 GitHub Pages。",
+    publish_editing: "正在编辑：{title}",
+    publish_saved: "已同步到 GitHub。",
+    publish_error: "同步失败，请稍后再试。",
+    publish_need_login: "请先登录管理员账户。",
+    publish_cover_too_large: "封面文件过大，请小于 1.5MB。",
     section_articles_label: "文章",
     section_articles_title: "文章分享",
     section_articles_lead: "选择性发布的阅读与研究片段。",
@@ -116,6 +133,8 @@ const translations = {
     action_read: "阅读",
     action_watch: "观看",
     action_delete: "删除",
+    action_edit: "编辑",
+    music_action: "播放",
     search_placeholder: "搜索文章 / 视频 / 音乐",
     search_hint: "输入关键词即可过滤",
     search_count: "匹配 {count} 条",
@@ -131,8 +150,7 @@ const translations = {
     article_label: "项目",
     article_title: "Cerdà's Vision of Barcelona Today",
     article_meta: "城市历史 · 5页 · 英文原文",
-    article_intro:
-      "简介：本文回顾 Cerdà 的扩展区规划理念，以及巴塞罗那当下的空间与社会张力。",
+    article_intro: "简介：本文回顾 Cerdà 的扩展区规划理念，以及巴塞罗那当下的空间与社会张力。",
     article_text_label: "全文",
     article_back: "返回主页",
     article_fig_1: "Photo by Plan of the Eixample development in Barcelona (1859), by Ildefons Cerdà",
@@ -164,8 +182,9 @@ const translations = {
     tab_profile: "Profile",
     tab_labs: "Labs",
     tab_field: "Field",
-    stack_title: "Cerdà's Vision of Barcelona Today",
-    stack_desc: "A short essay on the 19th-century Eixample plan and today's urban tensions.",
+    stack_title: "Current focus",
+    stack_desc:
+      "Turning complex issues into trainable, discussable, reusable knowledge structures.",
     stack_link: "Read article",
     latest_label: "Latest",
     latest_text: "Piloting China Ethics Bowl",
@@ -175,6 +194,14 @@ const translations = {
     section_publish_label: "Publish",
     section_publish_title: "Publish Center",
     section_publish_lead: "Post articles, videos, and music directly on the page.",
+    auth_label: "Admin",
+    auth_title: "Admin Login",
+    auth_lead: "Use Google login to publish and sync automatically.",
+    auth_login: "Google Login",
+    auth_logout: "Log out",
+    auth_status_guest: "Not signed in",
+    auth_status_admin: "Signed in (admin)",
+    auth_status_unavailable: "Login not configured",
     publish_section_label: "Section",
     publish_section_articles: "Articles",
     publish_section_rec_articles: "Recommended Articles",
@@ -192,10 +219,14 @@ const translations = {
     publish_cover_url_placeholder: "https://",
     publish_cover_file_label: "Upload cover",
     publish_submit: "Publish",
+    publish_update: "Update",
     publish_reset: "Reset",
-    publish_export: "Export content.json",
-    publish_import: "Import content.json",
-    publish_hint: "Export and replace data/content.json in GitHub to sync for everyone.",
+    publish_hint: "Publishing will auto-sync to GitHub Pages.",
+    publish_editing: "Editing: {title}",
+    publish_saved: "Synced to GitHub.",
+    publish_error: "Sync failed. Try again.",
+    publish_need_login: "Please sign in as admin first.",
+    publish_cover_too_large: "Cover file is too large. Please keep it under 1.5MB.",
     section_articles_label: "Articles",
     section_articles_title: "Article Share",
     section_articles_lead: "Selected reading and research excerpts.",
@@ -218,6 +249,8 @@ const translations = {
     action_read: "Read",
     action_watch: "Watch",
     action_delete: "Delete",
+    action_edit: "Edit",
+    music_action: "Play",
     search_placeholder: "Search articles / videos / music",
     search_hint: "Type to filter",
     search_count: "{count} results",
@@ -233,8 +266,7 @@ const translations = {
     article_label: "Project",
     article_title: "Cerdà's Vision of Barcelona Today",
     article_meta: "Urban history · 5 pages · Original English",
-    article_intro:
-      "Intro: Revisiting Cerdà's Eixample plan and the tensions visible in Barcelona today.",
+    article_intro: "Intro: Revisiting Cerdà's Eixample plan and the tensions visible in Barcelona today.",
     article_text_label: "Full text",
     article_back: "Back to home",
     article_fig_1: "Photo by Plan of the Eixample development in Barcelona (1859), by Ildefons Cerdà",
@@ -248,17 +280,6 @@ const themeLabels = {
   en: { theme: "Theme", light: "Light", dark: "Dark" },
 };
 
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-const savedTheme = localStorage.getItem("theme");
-const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-const savedLang = localStorage.getItem("lang");
-const browserLang = navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
-const initialLang = savedLang || browserLang;
-
-let currentTheme = initialTheme;
-let currentLang = initialLang;
-let sectionState = JSON.parse(localStorage.getItem(SECTION_STATE_KEY) || "{}");
-
 const sectionLists = {
   articles: document.querySelector('[data-section-list="articles"]'),
   recArticles: document.querySelector('[data-section-list="recArticles"]'),
@@ -266,8 +287,57 @@ const sectionLists = {
   music: document.querySelector('[data-section-list="music"]'),
 };
 
+const apiBase = getApiBase();
+const apiEndpoints = apiBase
+  ? {
+      content: `${apiBase}/api/content`,
+      login: `${apiBase}/api/auth/google`,
+      session: `${apiBase}/api/auth/session`,
+      logout: `${apiBase}/api/auth/logout`,
+    }
+  : null;
+
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+const savedTheme = localStorage.getItem("theme");
+const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+const savedLang = localStorage.getItem("lang");
+const browserLang = navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
+const initialLang = savedLang || browserLang;
+
 function getDict() {
   return translations[currentLang] || translations.zh;
+}
+
+function getApiBase() {
+  const meta = document.querySelector('meta[name="api-base"]');
+  if (meta && meta.content.trim()) {
+    return meta.content.trim().replace(/\/$/, "");
+  }
+  if (
+    location.hostname.endsWith("vercel.app") ||
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1"
+  ) {
+    return location.origin;
+  }
+  return "";
+}
+
+function normalizeContent(data) {
+  const normalized = { articles: [], recArticles: [], recVideos: [], music: [] };
+  if (!data) return normalized;
+  Object.keys(normalized).forEach((key) => {
+    if (Array.isArray(data[key])) {
+      normalized[key] = data[key].map((item) => normalizeItem(item));
+    }
+  });
+  return normalized;
+}
+
+function normalizeItem(item) {
+  if (!item) return { id: String(Date.now()) };
+  const id = item.id ? String(item.id) : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return { ...item, id };
 }
 
 function applyTranslations() {
@@ -295,6 +365,8 @@ function applyTranslations() {
     document.title = dict.title;
   }
   updateSectionToggleLabels();
+  updatePublishButton();
+  updateAuthUI();
   refreshSearchIndex();
   applySearchFilter();
   updateEmptyStates();
@@ -366,13 +438,36 @@ function initSections() {
   localStorage.setItem(SECTION_STATE_KEY, JSON.stringify(sectionState));
 }
 
-function buildSearchText(el) {
-  return (el.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+function buildItemSearchText(item, sectionKey) {
+  const dict = getDict();
+  const sectionLabelKey =
+    sectionKey === "articles"
+      ? dict.section_articles_title
+      : sectionKey === "recArticles"
+        ? dict.section_rec_articles_title
+        : sectionKey === "recVideos"
+          ? dict.section_rec_videos_title
+          : dict.section_music_title;
+  const parts = [
+    item.title,
+    item.desc,
+    item.tag,
+    sectionLabelKey,
+    Array.isArray(item.meta) ? item.meta.join(" ") : "",
+  ];
+  return parts
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
 }
 
 function refreshSearchIndex() {
   document.querySelectorAll("[data-searchable]").forEach((el) => {
-    el.dataset.searchText = el.dataset.searchText || buildSearchText(el);
+    if (!el.dataset.searchText) {
+      el.dataset.searchText = (el.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+    }
   });
 }
 
@@ -382,7 +477,7 @@ function applySearchFilter() {
   const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
   let visible = 0;
   document.querySelectorAll("[data-searchable]").forEach((el) => {
-    const text = el.dataset.searchText || buildSearchText(el);
+    const text = el.dataset.searchText || "";
     const match = tokens.length === 0 || tokens.every((token) => text.includes(token));
     el.style.display = match ? "" : "none";
     if (match) visible += 1;
@@ -398,55 +493,6 @@ function applySearchFilter() {
   updateEmptyStates();
 }
 
-function loadUserContent() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    return { articles: [], recArticles: [], recVideos: [], music: [] };
-  }
-  try {
-    const data = JSON.parse(raw);
-    return {
-      articles: data.articles || [],
-      recArticles: data.recArticles || [],
-      recVideos: data.recVideos || [],
-      music: data.music || [],
-    };
-  } catch (error) {
-    return { articles: [], recArticles: [], recVideos: [], music: [] };
-  }
-}
-
-function saveUserContent(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function loadHidden() {
-  const raw = localStorage.getItem(HIDDEN_KEY);
-  if (!raw) {
-    return { articles: [], recArticles: [], recVideos: [], music: [] };
-  }
-  try {
-    const data = JSON.parse(raw);
-    return {
-      articles: data.articles || [],
-      recArticles: data.recArticles || [],
-      recVideos: data.recVideos || [],
-      music: data.music || [],
-    };
-  } catch (error) {
-    return { articles: [], recArticles: [], recVideos: [], music: [] };
-  }
-}
-
-function saveHidden(data) {
-  localStorage.setItem(HIDDEN_KEY, JSON.stringify(data));
-}
-
-function normalizeItem(item, fallbackId) {
-  const id = item.id || fallbackId || `${item.title}-${Math.random()}`;
-  return { ...item, id };
-}
-
 function createActionLink(sectionKey, link) {
   const a = document.createElement("a");
   a.className = "btn ghost";
@@ -459,13 +505,26 @@ function createActionLink(sectionKey, link) {
     a.setAttribute("aria-disabled", "true");
     a.addEventListener("click", (event) => event.preventDefault());
   }
-  const key = sectionKey === "music" ? "music_action" : sectionKey === "recVideos" ? "action_watch" : "action_read";
+  const key =
+    sectionKey === "music" ? "music_action" : sectionKey === "recVideos" ? "action_watch" : "action_read";
   a.dataset.i18n = key;
   a.textContent = getDict()[key] || "Open";
   return a;
 }
 
-function createDeleteButton(sectionKey, itemId, origin) {
+function createEditButton(sectionKey, itemId) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn ghost";
+  button.dataset.i18n = "action_edit";
+  button.dataset.editItem = "true";
+  button.dataset.section = sectionKey;
+  button.dataset.itemId = String(itemId);
+  button.textContent = getDict().action_edit || "Edit";
+  return button;
+}
+
+function createDeleteButton(sectionKey, itemId) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "btn ghost";
@@ -473,20 +532,18 @@ function createDeleteButton(sectionKey, itemId, origin) {
   button.dataset.deleteItem = "true";
   button.dataset.section = sectionKey;
   button.dataset.itemId = String(itemId);
-  button.dataset.origin = origin;
   button.textContent = getDict().action_delete || "Delete";
   return button;
 }
 
-function createCardElement(item, sectionKey, origin) {
+function createCardElement(item, sectionKey) {
   const isMusic = sectionKey === "music";
   const card = document.createElement("article");
   card.className = `${isMusic ? "music-card" : "card stack"} content-card searchable-card`;
   card.dataset.searchable = "true";
   card.dataset.itemId = String(item.id || "");
   card.dataset.section = sectionKey;
-  card.dataset.origin = origin;
-  card.dataset.searchText = `${item.title} ${item.desc} ${item.tag || ""}`.toLowerCase();
+  card.dataset.searchText = buildItemSearchText(item, sectionKey);
 
   if (item.cover) {
     const cover = document.createElement("img");
@@ -521,7 +578,10 @@ function createCardElement(item, sectionKey, origin) {
     tag.textContent = item.tag || "";
     meta.appendChild(tag);
     meta.appendChild(createActionLink(sectionKey, item.link));
-    meta.appendChild(createDeleteButton(sectionKey, item.id, origin));
+    if (authState.admin) {
+      meta.appendChild(createEditButton(sectionKey, item.id));
+      meta.appendChild(createDeleteButton(sectionKey, item.id));
+    }
     card.appendChild(meta);
     return card;
   }
@@ -555,7 +615,10 @@ function createCardElement(item, sectionKey, origin) {
   const actions = document.createElement("div");
   actions.className = "card-actions";
   actions.appendChild(createActionLink(sectionKey, item.link));
-  actions.appendChild(createDeleteButton(sectionKey, item.id, origin));
+  if (authState.admin) {
+    actions.appendChild(createEditButton(sectionKey, item.id));
+    actions.appendChild(createDeleteButton(sectionKey, item.id));
+  }
   card.appendChild(actions);
   return card;
 }
@@ -566,34 +629,14 @@ function clearLists() {
   });
 }
 
-function buildMergedContent() {
-  const hidden = loadHidden();
-  const local = loadUserContent();
-  const merged = {};
-  Object.keys(sectionLists).forEach((key) => {
-    const baseItems = (baseContent[key] || []).filter(
-      (item) => !hidden[key].includes(String(item.id))
-    );
-    merged[key] = [...baseItems, ...(local[key] || [])];
-  });
-  return merged;
-}
-
 function renderContent() {
   clearLists();
-  const hidden = loadHidden();
-  const local = loadUserContent();
   Object.keys(sectionLists).forEach((key) => {
     const list = sectionLists[key];
     if (!list) return;
-    (baseContent[key] || []).forEach((item, index) => {
-      const normalized = normalizeItem(item, `${key}-base-${index}`);
-      if (hidden[key].includes(String(normalized.id))) return;
-      list.appendChild(createCardElement(normalized, key, "base"));
-    });
-    (local[key] || []).forEach((item, index) => {
-      const normalized = normalizeItem(item, `${key}-local-${index}`);
-      list.appendChild(createCardElement(normalized, key, "local"));
+    const items = contentState[key] || [];
+    items.forEach((item) => {
+      list.appendChild(createCardElement(normalizeItem(item), key));
     });
   });
   updateEmptyStates();
@@ -606,31 +649,10 @@ function updateEmptyStates() {
     const key = el.dataset.emptyFor;
     const list = document.querySelector(`[data-section-list="${key}"]`);
     if (!list) return;
-    const cards = Array.from(list.querySelectorAll(".content-card"));
+    const cards = Array.from(list.querySelectorAll("[data-searchable]"));
     const visible = cards.some((card) => card.style.display !== "none");
     el.style.display = visible ? "none" : "block";
   });
-}
-
-function deleteItem(sectionKey, itemId, origin, cardEl) {
-  if (origin === "base") {
-    const hidden = loadHidden();
-    hidden[sectionKey] = hidden[sectionKey] || [];
-    if (!hidden[sectionKey].includes(String(itemId))) {
-      hidden[sectionKey].push(String(itemId));
-      saveHidden(hidden);
-    }
-  } else {
-    const data = loadUserContent();
-    data[sectionKey] = (data[sectionKey] || []).filter((item) => String(item.id) !== String(itemId));
-    saveUserContent(data);
-  }
-  if (cardEl) {
-    cardEl.remove();
-  }
-  updateEmptyStates();
-  refreshSearchIndex();
-  applySearchFilter();
 }
 
 function readFileAsDataURL(file) {
@@ -642,48 +664,165 @@ function readFileAsDataURL(file) {
   });
 }
 
-function downloadJSON(data, filename) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+function setPublishStatus(message, tone, persist = false) {
+  if (!publishStatus) return;
+  publishStatus.textContent = message || "";
+  publishStatus.classList.remove("is-error", "is-success");
+  if (tone === "error") publishStatus.classList.add("is-error");
+  if (tone === "success") publishStatus.classList.add("is-success");
+  if (!persist && message) {
+    setTimeout(() => {
+      publishStatus.textContent = "";
+      publishStatus.classList.remove("is-error", "is-success");
+    }, 2400);
+  }
 }
 
-async function loadBaseContent() {
-  const override = localStorage.getItem(CONTENT_OVERRIDE_KEY);
-  if (override) {
+function updatePublishButton() {
+  if (!publishForm) return;
+  const submitBtn = publishForm.querySelector('button[type="submit"]');
+  if (!submitBtn) return;
+  const dict = getDict();
+  submitBtn.textContent = editState ? dict.publish_update : dict.publish_submit;
+  if (editState && dict.publish_editing) {
+    setPublishStatus(dict.publish_editing.replace("{title}", editState.title || ""), null, true);
+  }
+}
+
+function setEditState(item, sectionKey) {
+  editState = item
+    ? {
+        id: String(item.id),
+        section: sectionKey,
+        title: item.title,
+      }
+    : null;
+  updatePublishButton();
+  if (!item) {
+    setPublishStatus("", null, false);
+  }
+}
+
+function updateAuthUI() {
+  if (!authStatus) return;
+  const dict = getDict();
+  if (!authState.available) {
+    authStatus.textContent = dict.auth_status_unavailable;
+    if (loginBtn) loginBtn.disabled = true;
+    if (logoutBtn) logoutBtn.hidden = true;
+    adminOnlyEls.forEach((el) => (el.hidden = true));
+    return;
+  }
+  authStatus.textContent = authState.admin ? dict.auth_status_admin : dict.auth_status_guest;
+  if (authEmail) {
+    authEmail.textContent = authState.email || "";
+  }
+  if (loginBtn) loginBtn.hidden = authState.admin;
+  if (logoutBtn) logoutBtn.hidden = !authState.admin;
+  adminOnlyEls.forEach((el) => (el.hidden = !authState.admin));
+}
+
+async function fetchJson(url, options) {
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status}`);
+  }
+  return response.json();
+}
+
+async function loadContent() {
+  let data = null;
+  if (apiEndpoints) {
     try {
-      baseContent = JSON.parse(override);
-      return;
+      data = await fetchJson(apiEndpoints.content, { credentials: "include" });
     } catch (error) {
-      baseContent = { ...DEFAULT_CONTENT };
+      data = null;
     }
   }
+  if (!data) {
+    try {
+      const response = await fetch(CONTENT_URL, { cache: "no-store" });
+      if (response.ok) {
+        data = await response.json();
+      }
+    } catch (error) {
+      data = null;
+    }
+  }
+  contentState = normalizeContent(data || DEFAULT_CONTENT);
+}
+
+async function saveContent(nextContent) {
+  if (!apiEndpoints) {
+    throw new Error("API not configured");
+  }
+  const response = await fetch(apiEndpoints.content, {
+    method: "PUT",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(nextContent),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to save content");
+  }
+  return response.json();
+}
+
+function buildItemFromForm(formData, existing) {
+  const title = String(formData.get("title") || "").trim();
+  const desc = String(formData.get("desc") || "").trim();
+  const link = String(formData.get("link") || "").trim();
+  const tag = String(formData.get("tag") || "").trim();
+  const coverUrl = String(formData.get("coverUrl") || "").trim();
+  const item = {
+    id: existing?.id || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    title,
+    desc,
+    link,
+    tag,
+    cover: coverUrl,
+    meta: existing?.meta || [],
+  };
+  if (existing && !tag) {
+    item.tag = existing.tag || "";
+  }
+  if (existing && !coverUrl) {
+    item.cover = existing.cover || "";
+  }
+  return item;
+}
+
+async function syncContentUpdate(nextContent) {
+  const dict = getDict();
   try {
-    const response = await fetch(CONTENT_URL, { cache: "no-store" });
-    if (response.ok) {
-      baseContent = await response.json();
-    }
+    const saved = await saveContent(nextContent);
+    contentState = normalizeContent(saved);
+    renderContent();
+    setEditState(null, null);
+    setPublishStatus(dict.publish_saved, "success");
   } catch (error) {
-    baseContent = { ...DEFAULT_CONTENT };
+    contentState = normalizeContent(nextContent);
+    renderContent();
+    setPublishStatus(dict.publish_error, "error");
   }
 }
 
-function mergeContentForExport() {
-  const merged = buildMergedContent();
-  return merged;
-}
-
-function applyContentOverride(data) {
-  baseContent = data;
-  localStorage.setItem(CONTENT_OVERRIDE_KEY, JSON.stringify(data));
-  const hidden = { articles: [], recArticles: [], recVideos: [], music: [] };
-  saveHidden(hidden);
+async function initAuth() {
+  if (!apiEndpoints) {
+    authState = { available: false, admin: false, email: "" };
+    updateAuthUI();
+    return;
+  }
+  authState.available = true;
+  try {
+    const session = await fetchJson(apiEndpoints.session, { credentials: "include" });
+    authState.admin = !!session.admin;
+    authState.email = session.email || "";
+  } catch (error) {
+    authState.admin = false;
+    authState.email = "";
+  }
+  updateAuthUI();
   renderContent();
 }
 
@@ -691,8 +830,9 @@ async function init() {
   setLang(initialLang);
   setTheme(initialTheme);
   initSections();
-  await loadBaseContent();
+  await loadContent();
   renderContent();
+  await initAuth();
 }
 
 init();
@@ -731,92 +871,125 @@ if (searchInput) {
   searchInput.addEventListener("input", applySearchFilter);
 }
 
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    if (!apiEndpoints) return;
+    const returnTo = `${window.location.origin}${window.location.pathname}`;
+    window.location.href = `${apiEndpoints.login}?returnTo=${encodeURIComponent(returnTo)}`;
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    if (!apiEndpoints) return;
+    try {
+      await fetch(apiEndpoints.logout, { method: "POST", credentials: "include" });
+    } catch (error) {
+      // ignore
+    }
+    authState.admin = false;
+    authState.email = "";
+    updateAuthUI();
+    renderContent();
+  });
+}
+
 if (publishForm) {
   publishForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const dict = getDict();
+    if (!authState.admin) {
+      setPublishStatus(dict.publish_need_login, "error");
+      return;
+    }
+
     const formData = new FormData(publishForm);
     const section = String(formData.get("section") || "");
     const title = String(formData.get("title") || "").trim();
     const desc = String(formData.get("desc") || "").trim();
     const link = String(formData.get("link") || "").trim();
-    const tag = String(formData.get("tag") || "").trim();
-    const coverUrl = String(formData.get("coverUrl") || "").trim();
-    const coverFile = publishForm.querySelector('input[name="coverFile"]').files[0];
 
     if (!section || !title || !desc || !link) return;
 
-    let cover = coverUrl;
+    const coverFile = publishForm.querySelector('input[name="coverFile"]').files[0];
+    let coverDataUrl = "";
     if (coverFile) {
+      if (coverFile.size > 1024 * 1024 * 1.5) {
+        setPublishStatus(dict.publish_cover_too_large, "error");
+        return;
+      }
       try {
-        cover = await readFileAsDataURL(coverFile);
+        coverDataUrl = await readFileAsDataURL(coverFile);
       } catch (error) {
-        cover = coverUrl;
+        coverDataUrl = "";
       }
     }
 
-    const item = {
-      id: Date.now(),
-      title,
-      desc,
-      link,
-      tag,
-      cover,
-    };
+    const existingItems = contentState[section] || [];
+    const existing = editState
+      ? existingItems.find((item) => String(item.id) === String(editState.id))
+      : null;
+    const item = buildItemFromForm(formData, existing);
+    if (coverDataUrl) {
+      item.cover = coverDataUrl;
+    }
 
-    const data = loadUserContent();
-    data[section] = data[section] || [];
-    data[section].unshift(item);
-    saveUserContent(data);
+    let nextContent = { ...contentState };
+    nextContent[section] = [...existingItems];
 
-    const list = sectionLists[section];
-    if (list) {
-      const card = createCardElement(item, section, "local");
-      list.prepend(card);
+    if (existing) {
+      nextContent[section] = nextContent[section].map((entry) =>
+        String(entry.id) === String(existing.id) ? item : entry
+      );
+    } else {
+      nextContent[section].unshift(item);
     }
 
     publishForm.reset();
-    updateEmptyStates();
-    refreshSearchIndex();
-    applySearchFilter();
-    applyTranslations();
+    setEditState(null, null);
+    await syncContentUpdate(nextContent);
   });
 }
 
 if (resetFormBtn && publishForm) {
-  resetFormBtn.addEventListener("click", () => publishForm.reset());
-}
-
-if (exportBtn) {
-  exportBtn.addEventListener("click", () => {
-    const data = mergeContentForExport();
-    downloadJSON(data, "content.json");
-  });
-}
-
-if (importInput) {
-  importInput.addEventListener("change", async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    try {
-      const text = await file.text();
-      const data = JSON.parse(text);
-      applyContentOverride(data);
-    } catch (error) {
-      // ignore invalid json
-    }
+  resetFormBtn.addEventListener("click", () => {
+    publishForm.reset();
+    setEditState(null, null);
   });
 }
 
 if (document.body) {
-  document.body.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-delete-item]");
-    if (!button) return;
-    const sectionKey = button.dataset.section;
-    const itemId = button.dataset.itemId;
-    const origin = button.dataset.origin || "local";
-    const card = button.closest(".content-card");
-    if (!sectionKey || !itemId) return;
-    deleteItem(sectionKey, itemId, origin, card);
+  document.body.addEventListener("click", async (event) => {
+    const editBtn = event.target.closest("[data-edit-item]");
+    if (editBtn) {
+      const sectionKey = editBtn.dataset.section;
+      const itemId = editBtn.dataset.itemId;
+      const list = contentState[sectionKey] || [];
+      const item = list.find((entry) => String(entry.id) === String(itemId));
+      if (!item || !publishForm) return;
+
+      publishForm.querySelector('select[name="section"]').value = sectionKey;
+      publishForm.querySelector('input[name="title"]').value = item.title || "";
+      publishForm.querySelector('textarea[name="desc"]').value = item.desc || "";
+      publishForm.querySelector('input[name="link"]').value = item.link || "";
+      publishForm.querySelector('input[name="tag"]').value = item.tag || "";
+      publishForm.querySelector('input[name="coverUrl"]').value = item.cover || "";
+
+      setEditState(item, sectionKey);
+      publishForm.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    const deleteBtn = event.target.closest("[data-delete-item]");
+    if (!deleteBtn) return;
+    if (!authState.admin) return;
+
+    const sectionKey = deleteBtn.dataset.section;
+    const itemId = deleteBtn.dataset.itemId;
+    const list = contentState[sectionKey] || [];
+    const nextList = list.filter((item) => String(item.id) !== String(itemId));
+    const nextContent = { ...contentState, [sectionKey]: nextList };
+    await syncContentUpdate(nextContent);
   });
 }
 
