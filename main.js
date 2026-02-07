@@ -741,7 +741,7 @@ async function loadContent() {
   }
   if (!data) {
     try {
-      const response = await fetch(CONTENT_URL, { cache: "no-store" });
+      const response = await fetch(`${CONTENT_URL}?t=${Date.now()}`, { cache: "no-store" });
       if (response.ok) {
         data = await response.json();
       }
