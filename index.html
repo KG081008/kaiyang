@@ -3,296 +3,278 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>你的名字 | 个人介绍</title>
+    <title>Kling | 个人介绍</title>
     <meta
       name="description"
-      content="一个带点 Arc 气质、带点未来感的个人介绍主页。"
+      content="Kling 的个人介绍主页，轻盈、叙事、分层标签页风格。"
     />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="ambient" aria-hidden="true">
-      <span class="orb orb--coral"></span>
-      <span class="orb orb--mint"></span>
-      <span class="orb orb--sun"></span>
+      <span class="halo halo-1"></span>
+      <span class="halo halo-2"></span>
+      <span class="halo halo-3"></span>
       <span class="grid"></span>
     </div>
 
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">KG</div>
-        <div>
-          <div class="brand-name">你的名字</div>
-          <div class="brand-role">Product Designer · Creative Engineer</div>
-        </div>
+    <header class="site-header">
+      <div class="header-left">
+        <span class="status"><span class="dot"></span>Online</span>
+        <button class="chip-btn" type="button" data-theme-toggle>Theme: Light</button>
       </div>
-      <nav class="nav">
-        <a href="#about">关于</a>
-        <a href="#work">经历</a>
-        <a href="#projects">作品</a>
-        <a href="#notes">笔记</a>
-        <a href="#contact" class="nav-cta">打个招呼</a>
+      <div class="brand">Kling</div>
+      <nav class="header-nav">
+        <a href="#now">Now</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#notes">Notes</a>
+        <a class="nav-cta" href="#contact">Contact</a>
       </nav>
     </header>
 
     <main>
-      <section class="hero" id="top">
-        <div class="hero-copy">
-          <p class="eyebrow">你好，我是你的名字</p>
-          <h1>
-            把复杂的产品做得像滑动标签页一样顺滑，
-            我喜欢让体验有“呼吸感”。
-          </h1>
+      <section class="hero" id="home">
+        <div class="hero-text" data-reveal>
+          <div class="hero-pills">
+            <span class="pill">Kling Gu</span>
+            <span class="pill">G10 · China</span>
+            <span class="pill">Ethics Bowl</span>
+          </div>
+          <h1>我把学习、研究与项目做成可交付的作品。</h1>
           <p class="lead">
-            我在意节奏、结构、情绪与细节之间的平衡。擅长把设计语言转化为可落地的前端系统，
-            让团队的每一次迭代都更轻盈。
+            聚焦教育/公益组织、辩论与伦理讨论，以及 AI 工具化工作流（Notion/自动化/产品化）。
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#projects">看作品</a>
-            <a class="button ghost" href="#contact">联系我</a>
-            <div class="status-pill">
-              <span class="dot"></span>
-              可合作 · 2026
-            </div>
+            <a class="btn primary" href="#projects">看作品</a>
+            <a class="btn ghost" href="#contact">Email me</a>
           </div>
-          <div class="quick-facts">
-            <div class="fact">
-              <span class="fact-label">基地</span>
-              <span>上海 · 远程</span>
+          <div class="hero-meta">
+            <div class="meta-card">
+              <span class="meta-label">现在在做</span>
+              <span>Ethics Bowl 案例集与训练体系</span>
             </div>
-            <div class="fact">
-              <span class="fact-label">专注</span>
-              <span>AI 产品体验 / Design Ops</span>
+            <div class="meta-card">
+              <span class="meta-label">兴趣方向</span>
+              <span>Debate · Ethics · Community</span>
             </div>
-            <div class="fact">
-              <span class="fact-label">当下</span>
-              <span>构建可复用的交互叙事模版</span>
+            <div class="meta-card">
+              <span class="meta-label">工具控</span>
+              <span>Notion · Automation · Research</span>
             </div>
           </div>
         </div>
 
-        <div class="hero-visual">
-          <div class="window-card">
-            <div class="window-bar">
-              <span class="dot dot--red"></span>
-              <span class="dot dot--amber"></span>
-              <span class="dot dot--green"></span>
-              <div class="tabs">
-                <span class="tab active">profile</span>
-                <span class="tab">labs</span>
-                <span class="tab">now</span>
-              </div>
+        <div class="hero-visual" data-reveal>
+          <div class="stack-card">
+            <div class="stack-tabs">
+              <span class="tab active">profile</span>
+              <span class="tab">labs</span>
+              <span class="tab">field</span>
             </div>
-            <div class="window-body">
-              <div class="window-split">
-                <div>
-                  <p class="window-title">正在做</p>
-                  <p class="window-text">
-                    用“轨迹 + 反馈 + 叙事”重新组织产品体验，
-                    让界面像音乐一样有层次。
-                  </p>
-                  <div class="chip-row">
-                    <span class="chip">Interface Rhythm</span>
-                    <span class="chip">Design Systems</span>
-                    <span class="chip">Motion Craft</span>
-                  </div>
-                </div>
-                <div class="mini-stack">
-                  <div class="stack-card">
-                    <p class="stack-title">现在在看</p>
-                    <p class="stack-text">Arc 浏览器 · Notion 日历 · Midjourney</p>
-                  </div>
-                  <div class="stack-card accent">
-                    <p class="stack-title">体验关键词</p>
-                    <p class="stack-text">轻盈、敏捷、情感化、可持续</p>
-                  </div>
-                </div>
+            <div class="stack-body">
+              <h3>现在的重点</h3>
+              <p>把复杂议题整理成可训练、可讨论、可复用的知识结构。</p>
+              <div class="tag-row">
+                <span class="tag">Casewriting</span>
+                <span class="tag">Systems</span>
+                <span class="tag">Clarity</span>
               </div>
             </div>
           </div>
-          <div class="floating-card floating-card--left">
-            <p class="floating-label">我在意的三件事</p>
-            <p class="floating-text">结构 · 情绪 · 自由度</p>
-          </div>
-          <div class="floating-card floating-card--right">
-            <p class="floating-label">最近更新</p>
-            <p class="floating-text">Arc 风格导航实验 2.0</p>
+          <div class="mini-card">
+            <span class="mini-label">Latest</span>
+            <p>China Ethics Bowl 落地尝试中</p>
           </div>
         </div>
       </section>
 
-      <section class="section" id="about">
+      <section class="section" id="now" data-reveal>
         <div class="section-head">
           <div>
-            <p class="eyebrow">关于我</p>
-            <h2>像制作一部短片那样设计产品。</h2>
+            <p class="section-label">Now</p>
+            <h2>我现在在做的事</h2>
           </div>
-          <p class="section-lead">
-            我相信视觉不仅是表面，而是节奏、重心和共鸣的组合。日常把时间投入到
-            产品策略、设计系统与工程协作，让体验从 0 到 1 再到 10。
-          </p>
+          <p class="section-lead">每一块都尽量保持轻量，但能直接变成产出。</p>
         </div>
         <div class="bento">
-          <article class="tile tile-wide">
-            <h3>设计观</h3>
-            <p>
-              想象你每次打开产品都像“开一个新标签页”，那种无负担、轻盈、
-              充满可能性的感觉。我的工作是让产品回到这种状态。
-            </p>
+          <article class="card span-7">
+            <h3>Ethics Bowl（伦理碗）</h3>
+            <p>准备 2026 赛季案例集与训练体系，偏“中国现实议题”。</p>
+            <div class="tag-row">
+              <span class="tag">Ethics</span>
+              <span class="tag">Debate</span>
+              <span class="tag">Casewriting</span>
+            </div>
           </article>
-          <article class="tile">
-            <h3>合作方式</h3>
-            <p>产品定义 · 体验策略 · 设计落地 · 设计系统</p>
+          <article class="card">
+            <h3>中国 Ethics Bowl 落地</h3>
+            <p>对接国外团队支持，希望在中国举办更规范的比赛。</p>
+            <div class="tag-row">
+              <span class="tag">Partnership</span>
+              <span class="tag">Event</span>
+              <span class="tag">Community</span>
+            </div>
           </article>
-          <article class="tile">
-            <h3>偏好工具</h3>
-            <p>Figma · Framer · Webflow · React · Motion</p>
+          <article class="card">
+            <h3>志愿者翻译群体（深圳）</h3>
+            <p>搭建公益翻译协作网络，为社区/公益/国际交流提供语言支持。</p>
+            <div class="tag-row">
+              <span class="tag">Volunteer</span>
+              <span class="tag">Translation</span>
+              <span class="tag">Ops</span>
+            </div>
           </article>
-          <article class="tile tile-tall">
-            <h3>在意的小细节</h3>
-            <p>空白、呼吸、滚动节奏、对比、质感、声量</p>
+          <article class="card">
+            <h3>学习主线</h3>
+            <p>AP Euro 系统学习中，同时做结构化笔记与复盘。</p>
+            <div class="tag-row">
+              <span class="tag">AP</span>
+              <span class="tag">Notes</span>
+              <span class="tag">Systems</span>
+            </div>
           </article>
-          <article class="tile">
-            <h3>我是这样的</h3>
-            <p>更喜欢先做一个可以触摸的原型，再讨论愿景。</p>
+          <article class="card">
+            <h3>AI 工作流与工具</h3>
+            <p>搭建 Notion 工作台、自动化与浏览器效率工具。</p>
+            <div class="tag-row">
+              <span class="tag">AI</span>
+              <span class="tag">Notion</span>
+              <span class="tag">Automation</span>
+            </div>
           </article>
         </div>
       </section>
 
-      <section class="section" id="work">
+      <section class="section" id="experience" data-reveal>
         <div class="section-head">
           <div>
-            <p class="eyebrow">经历</p>
-            <h2>把体验从“好看”推到“好用又难忘”。</h2>
+            <p class="section-label">Experience</p>
+            <h2>少而准的经历</h2>
           </div>
-          <p class="section-lead">
-            多年的产品设计与创意工程经验，让我可以在抽象策略与细节落地之间自由切换。
-          </p>
+          <p class="section-lead">把每一段经历当成一页标签页。</p>
         </div>
         <div class="timeline">
           <article class="timeline-item">
             <div class="timeline-meta">
-              <span>2023 — 现在</span>
-              <span>体验设计负责人</span>
+              <span>International School Student（G10）</span>
+              <span>China</span>
             </div>
-            <h3>Rivulet AI</h3>
-            <p>打造 AI 工作流产品，从 0 到 1 构建设计系统、交互规范与实验体系。</p>
+            <p>以 AP 学科为主线，训练结构化写作与论证能力（AP Euro / 伦理讨论）。</p>
           </article>
           <article class="timeline-item">
             <div class="timeline-meta">
-              <span>2020 — 2023</span>
-              <span>资深产品设计师</span>
+              <span>Ethics Bowl Preparation & Casewriting</span>
+              <span>2025–2026</span>
             </div>
-            <h3>Cityworks Lab</h3>
-            <p>负责数据可视化平台与移动端体验，推动多端体验一致与品牌语言升级。</p>
+            <p>构建案例集、训练流程与赛制理解；目标是可复制的训练体系。</p>
           </article>
           <article class="timeline-item">
             <div class="timeline-meta">
-              <span>2017 — 2020</span>
-              <span>交互与品牌设计</span>
+              <span>Volunteer Translation Initiative（筹备）</span>
+              <span>South China</span>
             </div>
-            <h3>Studio Axis</h3>
-            <p>与创意团队一起做跨媒体项目，探索视觉与交互之间更诗意的连接。</p>
+            <p>搭建协作流程、招募与质量控制，面向公益与社区活动提供语言支持。</p>
           </article>
         </div>
       </section>
 
-      <section class="section" id="projects">
+      <section class="section" id="projects" data-reveal>
         <div class="section-head">
           <div>
-            <p class="eyebrow">作品</p>
-            <h2>一些被我称为“新标签页”的项目。</h2>
+            <p class="section-label">Projects</p>
+            <h2>作品与可交付物</h2>
           </div>
-          <p class="section-lead">每个项目都试图让用户拥有更多自由度和节奏感。</p>
+          <p class="section-lead">卡片 + 轻叙事。</p>
         </div>
-        <div class="project-grid">
-          <article class="project-card">
-            <div class="project-top">
-              <h3>Arcflow Dashboard</h3>
-              <span class="badge">Web App</span>
+        <div class="card-grid">
+          <article class="card stack">
+            <div class="card-top">
+              <h3>Ethics Bowl Casebook (CN Focus)</h3>
+              <span class="badge">Casebook</span>
             </div>
-            <p>把分散的数据和动作整理成“流动的轨迹”，让人快速进入状态。</p>
-            <div class="tag-row">
-              <span class="tag">Product Design</span>
-              <span class="tag">Design System</span>
-              <span class="tag">Motion</span>
-            </div>
-          </article>
-          <article class="project-card">
-            <div class="project-top">
-              <h3>Pulseboard</h3>
-              <span class="badge">Research</span>
-            </div>
-            <p>一个以节奏驱动的工作台，用“情绪波动图”帮助团队保持共鸣。</p>
-            <div class="tag-row">
-              <span class="tag">UX Strategy</span>
-              <span class="tag">Service Design</span>
-              <span class="tag">Prototype</span>
+            <p>把现实争议写成可比赛、可训练的案例集。</p>
+            <p class="meta">我做的：选题、结构模板、争议点提炼、训练问题设计。</p>
+            <p class="meta">产出：案例集（文档/Notion 页面链接位）</p>
+            <div class="card-actions">
+              <a class="btn ghost" href="#">View</a>
+              <a class="btn ghost" href="#">Notes</a>
             </div>
           </article>
-          <article class="project-card">
-            <div class="project-top">
-              <h3>Glow Notes</h3>
-              <span class="badge">Mobile</span>
+          <article class="card stack">
+            <div class="card-top">
+              <h3>Volunteer Translator Network (Shenzhen)</h3>
+              <span class="badge">Community</span>
             </div>
-            <p>将知识整理变成一段“缓慢展开的旅程”，强调视觉层级与沉浸感。</p>
-            <div class="tag-row">
-              <span class="tag">iOS</span>
-              <span class="tag">Visual Language</span>
-              <span class="tag">System Mapping</span>
+            <p>把“临时志愿者”变成可持续协作的翻译小队。</p>
+            <p class="meta">我做的：流程设计、招募规则、质检机制与协作规范。</p>
+            <p class="meta">产出：招募页/流程图/规范文档链接位</p>
+            <div class="card-actions">
+              <a class="btn ghost" href="#">View</a>
+              <a class="btn ghost" href="#">Repo</a>
+            </div>
+          </article>
+          <article class="card stack">
+            <div class="card-top">
+              <h3>Study + AI Workflow System</h3>
+              <span class="badge">System</span>
+            </div>
+            <p>用 Notion + 自动化把学习变成可追踪的系统。</p>
+            <p class="meta">我做的：仪表盘结构、任务流、复盘模板、资料归档规则。</p>
+            <p class="meta">产出：模板/截图/演示链接位</p>
+            <div class="card-actions">
+              <a class="btn ghost" href="#">View</a>
+              <a class="btn ghost" href="#">Demo</a>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="section" id="notes">
+      <section class="section" id="notes" data-reveal>
         <div class="section-head">
           <div>
-            <p class="eyebrow">笔记</p>
-            <h2>最近在写的东西。</h2>
+            <p class="section-label">Notes</p>
+            <h2>Field Notes</h2>
           </div>
-          <p class="section-lead">记录一些关于设计与技术的观察。</p>
+          <p class="section-lead">记录学习与项目过程的可复用片段。</p>
         </div>
-        <div class="notes-grid">
-          <article class="note-card">
-            <p class="note-date">2026 / 01</p>
+        <div class="notes">
+          <article class="note">
+            <span class="note-date">2026 / 01</span>
             <h3>让界面像音乐一样有段落感</h3>
-            <p>谈谈节奏与留白如何影响复杂产品的可读性与掌控感。</p>
+            <p>关于节奏、留白与复杂信息的可读性。</p>
           </article>
-          <article class="note-card">
-            <p class="note-date">2025 / 11</p>
+          <article class="note">
+            <span class="note-date">2025 / 11</span>
             <h3>设计系统不是 UI 组件库</h3>
-            <p>从语义、节奏、情绪三个维度重新拆解系统的意义。</p>
+            <p>从语义、节奏、情绪重新拆解系统的意义。</p>
           </article>
-          <article class="note-card">
-            <p class="note-date">2025 / 07</p>
+          <article class="note">
+            <span class="note-date">2025 / 07</span>
             <h3>构建一个可持续的互动叙事</h3>
-            <p>如何让产品的“故事感”能够随着版本更新不断延伸。</p>
+            <p>让产品的“故事感”能够持续迭代。</p>
           </article>
         </div>
       </section>
 
-      <section class="section contact" id="contact">
+      <section class="section" id="contact" data-reveal>
         <div class="contact-card">
           <div>
-            <p class="eyebrow">联系我</p>
+            <p class="section-label">Contact</p>
             <h2>如果你正在做有趣的项目，我们可以聊聊。</h2>
-            <p class="section-lead">
-              邮箱与社交信息可以在这里找到。也可以直接复制邮箱。
-            </p>
+            <p class="section-lead">先用占位链接，后续我再补齐真实地址。</p>
           </div>
           <div class="contact-actions">
-            <a class="button primary" href="mailto:hello@yourname.studio"
-              >hello@yourname.studio</a
-            >
-            <button class="button ghost" type="button" data-copy>
-              复制邮箱
+            <a class="btn primary" href="mailto:hello@kling.studio">Email me</a>
+            <button class="btn ghost" type="button" data-copy data-email="hello@kling.studio">
+              Copy email
             </button>
             <div class="socials">
-              <a href="#">Behance</a>
+              <a href="#">Email</a>
+              <a href="#">GitHub</a>
+              <a href="#">Notion</a>
+              <a href="#">X</a>
               <a href="#">LinkedIn</a>
-              <a href="#">微博</a>
-              <a href="#">即刻</a>
             </div>
           </div>
         </div>
@@ -300,46 +282,10 @@
     </main>
 
     <footer class="footer">
-      <div>
-        <span>© 2026 你的名字</span>
-        <span class="divider">·</span>
-        <span>现在时间 <strong data-local-time></strong></span>
-      </div>
+      <span>© 2026 Kling</span>
       <span>Made with clarity & rhythm.</span>
     </footer>
 
-    <script>
-      const timeEl = document.querySelector("[data-local-time]");
-      const copyBtn = document.querySelector("[data-copy]");
-      const email = "hello@yourname.studio";
-
-      function updateTime() {
-        if (!timeEl) return;
-        const now = new Date();
-        timeEl.textContent = now.toLocaleTimeString("zh-CN", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      }
-
-      updateTime();
-      if (timeEl) {
-        setInterval(updateTime, 1000 * 30);
-      }
-
-      if (copyBtn) {
-        copyBtn.addEventListener("click", async () => {
-          try {
-            await navigator.clipboard.writeText(email);
-            copyBtn.textContent = "已复制";
-            setTimeout(() => {
-              copyBtn.textContent = "复制邮箱";
-            }, 1800);
-          } catch (error) {
-            window.location.href = `mailto:${email}`;
-          }
-        });
-      }
-    </script>
+    <script src="./main.js"></script>
   </body>
 </html>
