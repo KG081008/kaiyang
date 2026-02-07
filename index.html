@@ -170,20 +170,48 @@
             <div>
               <p class="section-label" data-i18n="auth_label">Admin</p>
               <h3 data-i18n="auth_title">管理员登录</h3>
-              <p class="section-lead" data-i18n="auth_lead">使用 Google 登录后即可发布并自动同步。</p>
+              <p class="section-lead" data-i18n="auth_lead">输入管理员邮箱和密码即可登录。</p>
             </div>
-            <div class="auth-actions">
-              <button class="btn primary" type="button" data-login-btn data-i18n="auth_login">
-                Google 登录
-              </button>
-              <button class="btn ghost" type="button" data-logout-btn data-i18n="auth_logout" hidden>
-                退出登录
-              </button>
+            <form class="auth-actions" data-auth-form>
+              <div class="form-field">
+                <label class="form-label" data-i18n="auth_email_label">管理员邮箱</label>
+                <input
+                  type="email"
+                  name="email"
+                  data-i18n-placeholder="auth_email_placeholder"
+                  placeholder="admin@email.com"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" data-i18n="auth_password_label">管理员密码</label>
+                <input
+                  type="password"
+                  name="password"
+                  data-i18n-placeholder="auth_password_placeholder"
+                  placeholder="******"
+                  required
+                />
+              </div>
+              <div class="form-actions">
+                <button class="btn primary" type="submit" data-login-btn data-i18n="auth_login">
+                  登录
+                </button>
+                <button
+                  class="btn ghost"
+                  type="button"
+                  data-logout-btn
+                  data-i18n="auth_logout"
+                  hidden
+                >
+                  退出登录
+                </button>
+              </div>
               <div class="auth-meta">
                 <span class="auth-status" data-auth-status>未登录</span>
                 <span class="auth-email" data-auth-email></span>
               </div>
-            </div>
+            </form>
           </div>
           <form class="publish-form admin-only" data-publish-form data-admin-only hidden>
             <div class="form-field">

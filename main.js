@@ -14,6 +14,7 @@ const logoutBtn = document.querySelector("[data-logout-btn]");
 const authStatus = document.querySelector("[data-auth-status]");
 const authEmail = document.querySelector("[data-auth-email]");
 const adminOnlyEls = document.querySelectorAll("[data-admin-only]");
+const authForm = document.querySelector("[data-auth-form]");
 
 const SECTION_STATE_KEY = "sectionState";
 const CONTENT_URL = "./data/content.json";
@@ -82,12 +83,18 @@ const translations = {
     section_publish_lead: "在页面内直接发布文章、视频与音乐推荐。",
     auth_label: "管理员",
     auth_title: "管理员登录",
-    auth_lead: "使用 Google 登录后即可发布并自动同步。",
-    auth_login: "Google 登录",
+    auth_lead: "输入管理员邮箱和密码即可登录。",
+    auth_login: "登录",
     auth_logout: "退出登录",
     auth_status_guest: "未登录",
     auth_status_admin: "已登录（管理员）",
     auth_status_unavailable: "未配置登录",
+    auth_email_label: "管理员邮箱",
+    auth_email_placeholder: "admin@email.com",
+    auth_password_label: "管理员密码",
+    auth_password_placeholder: "******",
+    auth_login_failed: "登录失败，请检查邮箱或密码。",
+    auth_login_success: "登录成功。",
     publish_section_label: "选择板块",
     publish_section_articles: "文章分享",
     publish_section_rec_articles: "推荐文章",
@@ -199,12 +206,18 @@ const translations = {
     section_publish_lead: "Post articles, videos, and music directly on the page.",
     auth_label: "Admin",
     auth_title: "Admin Login",
-    auth_lead: "Use Google login to publish and sync automatically.",
-    auth_login: "Google Login",
+    auth_lead: "Sign in with your admin email and password.",
+    auth_login: "Login",
     auth_logout: "Log out",
     auth_status_guest: "Not signed in",
     auth_status_admin: "Signed in (admin)",
     auth_status_unavailable: "Login not configured",
+    auth_email_label: "Admin email",
+    auth_email_placeholder: "admin@email.com",
+    auth_password_label: "Admin password",
+    auth_password_placeholder: "******",
+    auth_login_failed: "Login failed. Check email or password.",
+    auth_login_success: "Login successful.",
     publish_section_label: "Section",
     publish_section_articles: "Articles",
     publish_section_rec_articles: "Recommended Articles",
@@ -298,6 +311,7 @@ const apiEndpoints = apiBase
       login: `${apiBase}/api/auth/google`,
       session: `${apiBase}/api/auth/session`,
       logout: `${apiBase}/api/auth/logout`,
+      passwordLogin: `${apiBase}/api/auth/password`,
     }
   : null;
 
@@ -744,6 +758,11 @@ function updateAuthUI() {
   if (!authState.available) {
     authStatus.textContent = dict.auth_status_unavailable;
     if (loginBtn) loginBtn.disabled = true;
+    if (authForm) {
+      authForm.querySelectorAll("input").forEach((input) => {
+        input.disabled = true;
+      });
+    }
     if (logoutBtn) logoutBtn.hidden = true;
     adminOnlyEls.forEach((el) => (el.hidden = true));
     return;
@@ -754,6 +773,11 @@ function updateAuthUI() {
   }
   if (loginBtn) loginBtn.hidden = authState.admin;
   if (logoutBtn) logoutBtn.hidden = !authState.admin;
+  if (authForm) {
+    authForm.querySelectorAll("input").forEach((input) => {
+      input.disabled = authState.admin;
+    });
+  }
   adminOnlyEls.forEach((el) => (el.hidden = !authState.admin));
 }
 
@@ -761,6 +785,22 @@ async function fetchJson(url, options) {
   const response = await fetch(url, options);
   if (!response.ok) {
     throw new Error(`Request failed: ${response.status}`);
+  }
+  return response.json();
+}
+
+async function loginWithPassword(email, password) {
+  if (!apiEndpoints?.passwordLogin) {
+    throw new Error("Login not configured");
+  }
+  const response = await fetch(apiEndpoints.passwordLogin, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) {
+    throw new Error("Login failed");
   }
   return response.json();
 }
@@ -926,11 +966,26 @@ if (searchInput) {
   searchInput.addEventListener("input", applySearchFilter);
 }
 
-if (loginBtn) {
-  loginBtn.addEventListener("click", () => {
-    if (!apiEndpoints) return;
-    const returnTo = `${window.location.origin}${window.location.pathname}`;
-    window.location.href = `${apiEndpoints.login}?returnTo=${encodeURIComponent(returnTo)}`;
+if (authForm) {
+  authForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const dict = getDict();
+    if (!apiEndpoints) {
+      setPublishStatus(dict.auth_status_unavailable, "error");
+      return;
+    }
+    const formData = new FormData(authForm);
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
+    if (!email || !password) return;
+    try {
+      await loginWithPassword(email, password);
+      await initAuth();
+      setPublishStatus(dict.auth_login_success, "success");
+      authForm.reset();
+    } catch (error) {
+      setPublishStatus(dict.auth_login_failed, "error");
+    }
   });
 }
 
