@@ -16,6 +16,7 @@ const translations = {
     title: "Kling | 个人介绍",
     status_online: "在线",
     nav_intro: "简介",
+    nav_search: "检索",
     nav_articles: "文章",
     nav_rec_articles: "推荐文章",
     nav_rec_videos: "推荐视频",
@@ -103,6 +104,7 @@ const translations = {
     footer_right: "以清晰与节奏制作。",
     action_read: "阅读",
     action_watch: "观看",
+    action_delete: "删除",
     search_placeholder: "搜索文章 / 视频 / 音乐",
     search_hint: "输入关键词即可过滤",
     search_empty: "暂无匹配结果。",
@@ -128,6 +130,7 @@ const translations = {
     title: "Kling | Profile",
     status_online: "Online",
     nav_intro: "Intro",
+    nav_search: "Search",
     nav_articles: "Articles",
     nav_rec_articles: "Recommended Articles",
     nav_rec_videos: "Recommended Videos",
@@ -215,6 +218,7 @@ const translations = {
     footer_right: "Made with clarity & rhythm.",
     action_read: "Read",
     action_watch: "Watch",
+    action_delete: "Delete",
     search_placeholder: "Search articles / videos / music",
     search_hint: "Type to filter",
     search_empty: "No results found.",
@@ -423,17 +427,34 @@ function createActionLink(sectionKey, link) {
   return a;
 }
 
+function createDeleteButton(sectionKey, itemId) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn ghost";
+  button.dataset.i18n = "action_delete";
+  button.dataset.deleteItem = "true";
+  button.dataset.section = sectionKey;
+  button.dataset.itemId = String(itemId);
+  const dict = translations[currentLang] || translations.zh;
+  button.textContent = dict.action_delete || "Delete";
+  return button;
+}
+
 function createCardElement(item, sectionKey) {
   const isMusic = sectionKey === "music";
   const card = document.createElement("article");
   card.className = `${isMusic ? "music-card" : "card stack"} content-card searchable-card`;
   card.dataset.searchable = "true";
+  card.dataset.itemId = String(item.id || "");
+  card.dataset.section = sectionKey;
   card.dataset.searchText = `${item.title} ${item.desc} ${item.tag || ""}`.toLowerCase();
 
   if (item.cover) {
-    const cover = document.createElement("div");
+    const cover = document.createElement("img");
     cover.className = "card-cover";
-    cover.style.backgroundImage = `url('${item.cover}')`;
+    cover.src = item.cover;
+    cover.alt = item.title || "Cover";
+    cover.loading = "lazy";
     card.appendChild(cover);
   }
 
@@ -461,6 +482,7 @@ function createCardElement(item, sectionKey) {
     tag.textContent = item.tag || "";
     meta.appendChild(tag);
     meta.appendChild(createActionLink(sectionKey, item.link));
+    meta.appendChild(createDeleteButton(sectionKey, item.id));
     card.appendChild(meta);
     return card;
   }
@@ -485,6 +507,7 @@ function createCardElement(item, sectionKey) {
   const actions = document.createElement("div");
   actions.className = "card-actions";
   actions.appendChild(createActionLink(sectionKey, item.link));
+  actions.appendChild(createDeleteButton(sectionKey, item.id));
   card.appendChild(actions);
   return card;
 }
@@ -511,6 +534,18 @@ function updateEmptyStates() {
     const hasCards = list.querySelectorAll(".content-card").length > 0;
     el.style.display = hasCards ? "none" : "block";
   });
+}
+
+function deleteItem(sectionKey, itemId, cardEl) {
+  const data = loadUserContent();
+  data[sectionKey] = (data[sectionKey] || []).filter((item) => String(item.id) !== String(itemId));
+  saveUserContent(data);
+  if (cardEl) {
+    cardEl.remove();
+  }
+  updateEmptyStates();
+  refreshSearchIndex();
+  applySearchFilter();
 }
 
 function readFileAsDataURL(file) {
@@ -615,6 +650,18 @@ if (publishForm) {
 
 if (resetFormBtn && publishForm) {
   resetFormBtn.addEventListener("click", () => publishForm.reset());
+}
+
+if (document.body) {
+  document.body.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-delete-item]");
+    if (!button) return;
+    const sectionKey = button.dataset.section;
+    const itemId = button.dataset.itemId;
+    const card = button.closest(".content-card");
+    if (!sectionKey || !itemId) return;
+    deleteItem(sectionKey, itemId, card);
+  });
 }
 
 if (revealItems.length > 0) {

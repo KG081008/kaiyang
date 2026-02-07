@@ -32,6 +32,7 @@
       <div class="brand">Kling</div>
       <nav class="header-nav">
         <a href="#intro" data-i18n="nav_intro">Intro</a>
+        <a href="#search" data-i18n="nav_search">Search</a>
         <a href="#articles" data-i18n="nav_articles">Articles</a>
         <a href="#rec-articles" data-i18n="nav_rec_articles">Recommended</a>
         <a href="#rec-videos" data-i18n="nav_rec_videos">Videos</a>
@@ -41,11 +42,12 @@
     </header>
 
     <main>
-      <div class="search-bar" data-reveal>
+      <div class="search-bar" id="search" data-reveal>
         <input
           type="search"
           class="search-input"
           data-search
+          aria-label="Search content"
           data-i18n-placeholder="search_placeholder"
           placeholder="搜索文章 / 视频 / 音乐"
         />
@@ -241,10 +243,18 @@
               <p data-i18n="proj4_desc">关于 19 世纪 Eixample 规划与当代城市问题的短文。</p>
               <p class="meta" data-i18n="proj4_meta1">简介：回顾 Cerdà 规划理念及其在今日的张力。</p>
               <p class="meta" data-i18n="proj4_meta2">形式：在线阅读文章（非 PDF）。</p>
-              <div class="card-actions">
-                <a class="btn ghost" href="./cerda-vision.html" data-i18n="action_read">Read</a>
-              </div>
-            </article>
+            <div class="card-actions">
+              <a
+                class="btn ghost"
+                href="./cerda-vision.html"
+                target="_blank"
+                rel="noopener"
+                data-i18n="action_read"
+              >
+                Read
+              </a>
+            </div>
+          </article>
           </div>
           <p class="empty-state" data-empty-for="articles" data-i18n="empty_articles">
             暂无内容，可在发布中心添加。
