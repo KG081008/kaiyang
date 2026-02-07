@@ -52,6 +52,7 @@
           placeholder="搜索文章 / 视频 / 音乐"
         />
         <span class="search-tip" data-i18n="search_hint">输入关键词即可过滤</span>
+        <span class="search-count" data-search-count>0</span>
       </div>
       <p class="empty-state search-empty" data-search-empty data-i18n="search_empty">暂无匹配结果。</p>
 
@@ -125,7 +126,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -214,6 +214,15 @@
               </button>
             </div>
           </form>
+          <div class="publish-tools">
+            <button class="btn ghost" type="button" data-export-content data-i18n="publish_export">
+              导出 content.json
+            </button>
+            <label class="btn ghost file-btn">
+              <span data-i18n="publish_import">导入 content.json</span>
+              <input type="file" data-import-content accept="application/json" />
+            </label>
+          </div>
           <p class="publish-hint" data-i18n="publish_hint">内容仅保存在本地浏览器。</p>
         </div>
       </section>
@@ -234,28 +243,7 @@
           </div>
         </div>
         <div class="section-body" data-section-body="articles">
-          <div class="card-grid" data-section-list="articles">
-            <article class="card stack content-card searchable-card" data-searchable>
-              <div class="card-top">
-                <h3 data-i18n="proj4_title">Cerdà's Vision of Barcelona Today</h3>
-                <span class="badge" data-i18n="proj4_badge">Urban Study</span>
-              </div>
-              <p data-i18n="proj4_desc">关于 19 世纪 Eixample 规划与当代城市问题的短文。</p>
-              <p class="meta" data-i18n="proj4_meta1">简介：回顾 Cerdà 规划理念及其在今日的张力。</p>
-              <p class="meta" data-i18n="proj4_meta2">形式：在线阅读文章（非 PDF）。</p>
-            <div class="card-actions">
-              <a
-                class="btn ghost"
-                href="./cerda-vision.html"
-                target="_blank"
-                rel="noopener"
-                data-i18n="action_read"
-              >
-                Read
-              </a>
-            </div>
-          </article>
-          </div>
+          <div class="card-grid" data-section-list="articles"></div>
           <p class="empty-state" data-empty-for="articles" data-i18n="empty_articles">
             暂无内容，可在发布中心添加。
           </p>

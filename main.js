@@ -5,11 +5,36 @@ const copyBtn = document.querySelector("[data-copy]");
 const revealItems = document.querySelectorAll("[data-reveal]");
 const searchInput = document.querySelector("[data-search]");
 const searchEmpty = document.querySelector("[data-search-empty]");
+const searchCount = document.querySelector("[data-search-count]");
 const publishForm = document.querySelector("[data-publish-form]");
 const resetFormBtn = document.querySelector("[data-reset-form]");
+const exportBtn = document.querySelector("[data-export-content]");
+const importInput = document.querySelector("[data-import-content]");
 
 const STORAGE_KEY = "userContent";
 const SECTION_STATE_KEY = "sectionState";
+const HIDDEN_KEY = "hiddenContent";
+const CONTENT_OVERRIDE_KEY = "contentOverride";
+const CONTENT_URL = "./data/content.json";
+
+const DEFAULT_CONTENT = {
+  articles: [
+    {
+      id: "cerda-vision",
+      title: "Cerdà's Vision of Barcelona Today",
+      desc: "关于 19 世纪 Eixample 规划与当代城市问题的短文。",
+      tag: "Urban Study",
+      link: "./cerda-vision.html",
+      cover: "./assets/cerda-1.jpg",
+      meta: ["简介：回顾 Cerdà 规划理念及其在今日的张力。", "形式：在线阅读文章（非 PDF）。"],
+    },
+  ],
+  recArticles: [],
+  recVideos: [],
+  music: [],
+};
+
+let baseContent = { ...DEFAULT_CONTENT };
 
 const translations = {
   zh: {
@@ -64,7 +89,9 @@ const translations = {
     publish_cover_file_label: "上传封面",
     publish_submit: "发布",
     publish_reset: "清空",
-    publish_hint: "内容仅保存在本地浏览器。",
+    publish_export: "导出 content.json",
+    publish_import: "导入 content.json",
+    publish_hint: "导出后替换 data/content.json 并推送到 GitHub，全站同步。",
     section_articles_label: "文章",
     section_articles_title: "文章分享",
     section_articles_lead: "选择性发布的阅读与研究片段。",
@@ -77,24 +104,6 @@ const translations = {
     section_music_label: "音乐",
     section_music_title: "音乐分享",
     section_music_lead: "写作、思考与放空时的声音库存。",
-    proj4_title: "Cerdà's Vision of Barcelona Today",
-    proj4_badge: "城市研究",
-    proj4_desc: "关于 19 世纪 Eixample 规划与当代城市问题的短文。",
-    proj4_meta1: "简介：回顾 Cerdà 规划理念及其在今日的张力。",
-    proj4_meta2: "形式：在线阅读文章（非 PDF）。",
-    music1_title: "深夜专注",
-    music1_badge: "歌单",
-    music1_desc: "安静、有结构的氛围音，适合深度阅读。",
-    music1_meta: "Ambient · Minimal",
-    music2_title: "城市漫步",
-    music2_badge: "合集",
-    music2_desc: "有一点律动的城市漫步配乐。",
-    music2_meta: "Electronic · Jazz",
-    music3_title: "写作循环",
-    music3_badge: "循环",
-    music3_desc: "写作时反复循环的小段落。",
-    music3_meta: "Piano · Strings",
-    music_action: "试听",
     section_contact_label: "联系",
     section_contact_title: "如果你正在做有趣的项目，我们可以聊聊。",
     section_contact_lead: "联系方式仅保留 Gmail 与 X。",
@@ -107,6 +116,7 @@ const translations = {
     action_delete: "删除",
     search_placeholder: "搜索文章 / 视频 / 音乐",
     search_hint: "输入关键词即可过滤",
+    search_count: "匹配 {count} 条",
     search_empty: "暂无匹配结果。",
     section_toggle_open: "展开",
     section_toggle_close: "收起",
@@ -178,7 +188,9 @@ const translations = {
     publish_cover_file_label: "Upload cover",
     publish_submit: "Publish",
     publish_reset: "Reset",
-    publish_hint: "Items are stored locally in this browser.",
+    publish_export: "Export content.json",
+    publish_import: "Import content.json",
+    publish_hint: "Export and replace data/content.json in GitHub to sync for everyone.",
     section_articles_label: "Articles",
     section_articles_title: "Article Share",
     section_articles_lead: "Selected reading and research excerpts.",
@@ -191,24 +203,6 @@ const translations = {
     section_music_label: "Music",
     section_music_title: "Music Share",
     section_music_lead: "Soundtracks for writing, thinking, and drifting.",
-    proj4_title: "Cerdà's Vision of Barcelona Today",
-    proj4_badge: "Urban Study",
-    proj4_desc: "A short essay on the 19th-century Eixample plan and today's urban tensions.",
-    proj4_meta1: "Intro: Revisiting Cerdà's planning logic and its present-day frictions.",
-    proj4_meta2: "Format: Online reading page (not a PDF).",
-    music1_title: "Late Night Focus",
-    music1_badge: "Playlist",
-    music1_desc: "Quiet, structured ambience for deep reading.",
-    music1_meta: "Ambient · Minimal",
-    music2_title: "City Walk",
-    music2_badge: "Set",
-    music2_desc: "A little groove for urban strolls.",
-    music2_meta: "Electronic · Jazz",
-    music3_title: "Storywriting",
-    music3_badge: "Loop",
-    music3_desc: "Short loops I repeat while writing.",
-    music3_meta: "Piano · Strings",
-    music_action: "Listen",
     section_contact_label: "Contact",
     section_contact_title: "If you're building something interesting, let's talk.",
     section_contact_lead: "Contact via Gmail and X only.",
@@ -221,6 +215,7 @@ const translations = {
     action_delete: "Delete",
     search_placeholder: "Search articles / videos / music",
     search_hint: "Type to filter",
+    search_count: "{count} results",
     search_empty: "No results found.",
     section_toggle_open: "Expand",
     section_toggle_close: "Collapse",
@@ -265,8 +260,12 @@ const sectionLists = {
   music: document.querySelector('[data-section-list="music"]'),
 };
 
+function getDict() {
+  return translations[currentLang] || translations.zh;
+}
+
 function applyTranslations() {
-  const dict = translations[currentLang] || translations.zh;
+  const dict = getDict();
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.dataset.i18n;
     if (!key) return;
@@ -327,7 +326,7 @@ function setLang(lang) {
 }
 
 function updateSectionToggleLabels() {
-  const dict = translations[currentLang] || translations.zh;
+  const dict = getDict();
   document.querySelectorAll("[data-section-toggle]").forEach((btn) => {
     const id = btn.dataset.target;
     const collapsed = !!sectionState[id];
@@ -367,23 +366,30 @@ function buildSearchText(el) {
 
 function refreshSearchIndex() {
   document.querySelectorAll("[data-searchable]").forEach((el) => {
-    el.dataset.searchText = buildSearchText(el);
+    el.dataset.searchText = el.dataset.searchText || buildSearchText(el);
   });
 }
 
 function applySearchFilter() {
   if (!searchInput) return;
   const query = searchInput.value.trim().toLowerCase();
+  const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
   let visible = 0;
   document.querySelectorAll("[data-searchable]").forEach((el) => {
     const text = el.dataset.searchText || buildSearchText(el);
-    const match = !query || text.includes(query);
+    const match = tokens.length === 0 || tokens.every((token) => text.includes(token));
     el.style.display = match ? "" : "none";
     if (match) visible += 1;
   });
   if (searchEmpty) {
     searchEmpty.style.display = query && visible === 0 ? "block" : "none";
   }
+  if (searchCount) {
+    const dict = getDict();
+    const template = dict.search_count || "{count}";
+    searchCount.textContent = template.replace("{count}", String(visible));
+  }
+  updateEmptyStates();
 }
 
 function loadUserContent() {
@@ -408,6 +414,33 @@ function saveUserContent(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+function loadHidden() {
+  const raw = localStorage.getItem(HIDDEN_KEY);
+  if (!raw) {
+    return { articles: [], recArticles: [], recVideos: [], music: [] };
+  }
+  try {
+    const data = JSON.parse(raw);
+    return {
+      articles: data.articles || [],
+      recArticles: data.recArticles || [],
+      recVideos: data.recVideos || [],
+      music: data.music || [],
+    };
+  } catch (error) {
+    return { articles: [], recArticles: [], recVideos: [], music: [] };
+  }
+}
+
+function saveHidden(data) {
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify(data));
+}
+
+function normalizeItem(item, fallbackId) {
+  const id = item.id || fallbackId || `${item.title}-${Math.random()}`;
+  return { ...item, id };
+}
+
 function createActionLink(sectionKey, link) {
   const a = document.createElement("a");
   a.className = "btn ghost";
@@ -422,12 +455,11 @@ function createActionLink(sectionKey, link) {
   }
   const key = sectionKey === "music" ? "music_action" : sectionKey === "recVideos" ? "action_watch" : "action_read";
   a.dataset.i18n = key;
-  const dict = translations[currentLang] || translations.zh;
-  a.textContent = dict[key] || "Open";
+  a.textContent = getDict()[key] || "Open";
   return a;
 }
 
-function createDeleteButton(sectionKey, itemId) {
+function createDeleteButton(sectionKey, itemId, origin) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "btn ghost";
@@ -435,18 +467,19 @@ function createDeleteButton(sectionKey, itemId) {
   button.dataset.deleteItem = "true";
   button.dataset.section = sectionKey;
   button.dataset.itemId = String(itemId);
-  const dict = translations[currentLang] || translations.zh;
-  button.textContent = dict.action_delete || "Delete";
+  button.dataset.origin = origin;
+  button.textContent = getDict().action_delete || "Delete";
   return button;
 }
 
-function createCardElement(item, sectionKey) {
+function createCardElement(item, sectionKey, origin) {
   const isMusic = sectionKey === "music";
   const card = document.createElement("article");
   card.className = `${isMusic ? "music-card" : "card stack"} content-card searchable-card`;
   card.dataset.searchable = "true";
   card.dataset.itemId = String(item.id || "");
   card.dataset.section = sectionKey;
+  card.dataset.origin = origin;
   card.dataset.searchText = `${item.title} ${item.desc} ${item.tag || ""}`.toLowerCase();
 
   if (item.cover) {
@@ -482,7 +515,7 @@ function createCardElement(item, sectionKey) {
     tag.textContent = item.tag || "";
     meta.appendChild(tag);
     meta.appendChild(createActionLink(sectionKey, item.link));
-    meta.appendChild(createDeleteButton(sectionKey, item.id));
+    meta.appendChild(createDeleteButton(sectionKey, item.id, origin));
     card.appendChild(meta);
     return card;
   }
@@ -504,21 +537,57 @@ function createCardElement(item, sectionKey) {
   desc.textContent = item.desc;
   card.appendChild(desc);
 
+  if (Array.isArray(item.meta)) {
+    item.meta.forEach((line) => {
+      const metaLine = document.createElement("p");
+      metaLine.className = "meta";
+      metaLine.textContent = line;
+      card.appendChild(metaLine);
+    });
+  }
+
   const actions = document.createElement("div");
   actions.className = "card-actions";
   actions.appendChild(createActionLink(sectionKey, item.link));
-  actions.appendChild(createDeleteButton(sectionKey, item.id));
+  actions.appendChild(createDeleteButton(sectionKey, item.id, origin));
   card.appendChild(actions);
   return card;
 }
 
-function renderUserContent() {
-  const data = loadUserContent();
+function clearLists() {
+  Object.values(sectionLists).forEach((list) => {
+    if (list) list.innerHTML = "";
+  });
+}
+
+function buildMergedContent() {
+  const hidden = loadHidden();
+  const local = loadUserContent();
+  const merged = {};
+  Object.keys(sectionLists).forEach((key) => {
+    const baseItems = (baseContent[key] || []).filter(
+      (item) => !hidden[key].includes(String(item.id))
+    );
+    merged[key] = [...baseItems, ...(local[key] || [])];
+  });
+  return merged;
+}
+
+function renderContent() {
+  clearLists();
+  const hidden = loadHidden();
+  const local = loadUserContent();
   Object.keys(sectionLists).forEach((key) => {
     const list = sectionLists[key];
     if (!list) return;
-    data[key].forEach((item) => {
-      list.appendChild(createCardElement(item, key));
+    (baseContent[key] || []).forEach((item, index) => {
+      const normalized = normalizeItem(item, `${key}-base-${index}`);
+      if (hidden[key].includes(String(normalized.id))) return;
+      list.appendChild(createCardElement(normalized, key, "base"));
+    });
+    (local[key] || []).forEach((item, index) => {
+      const normalized = normalizeItem(item, `${key}-local-${index}`);
+      list.appendChild(createCardElement(normalized, key, "local"));
     });
   });
   updateEmptyStates();
@@ -531,15 +600,25 @@ function updateEmptyStates() {
     const key = el.dataset.emptyFor;
     const list = document.querySelector(`[data-section-list="${key}"]`);
     if (!list) return;
-    const hasCards = list.querySelectorAll(".content-card").length > 0;
-    el.style.display = hasCards ? "none" : "block";
+    const cards = Array.from(list.querySelectorAll(".content-card"));
+    const visible = cards.some((card) => card.style.display !== "none");
+    el.style.display = visible ? "none" : "block";
   });
 }
 
-function deleteItem(sectionKey, itemId, cardEl) {
-  const data = loadUserContent();
-  data[sectionKey] = (data[sectionKey] || []).filter((item) => String(item.id) !== String(itemId));
-  saveUserContent(data);
+function deleteItem(sectionKey, itemId, origin, cardEl) {
+  if (origin === "base") {
+    const hidden = loadHidden();
+    hidden[sectionKey] = hidden[sectionKey] || [];
+    if (!hidden[sectionKey].includes(String(itemId))) {
+      hidden[sectionKey].push(String(itemId));
+      saveHidden(hidden);
+    }
+  } else {
+    const data = loadUserContent();
+    data[sectionKey] = (data[sectionKey] || []).filter((item) => String(item.id) !== String(itemId));
+    saveUserContent(data);
+  }
   if (cardEl) {
     cardEl.remove();
   }
@@ -557,10 +636,60 @@ function readFileAsDataURL(file) {
   });
 }
 
-setLang(initialLang);
-setTheme(initialTheme);
-initSections();
-renderUserContent();
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+async function loadBaseContent() {
+  const override = localStorage.getItem(CONTENT_OVERRIDE_KEY);
+  if (override) {
+    try {
+      baseContent = JSON.parse(override);
+      return;
+    } catch (error) {
+      baseContent = { ...DEFAULT_CONTENT };
+    }
+  }
+  try {
+    const response = await fetch(CONTENT_URL, { cache: "no-store" });
+    if (response.ok) {
+      baseContent = await response.json();
+    }
+  } catch (error) {
+    baseContent = { ...DEFAULT_CONTENT };
+  }
+}
+
+function mergeContentForExport() {
+  const merged = buildMergedContent();
+  return merged;
+}
+
+function applyContentOverride(data) {
+  baseContent = data;
+  localStorage.setItem(CONTENT_OVERRIDE_KEY, JSON.stringify(data));
+  const hidden = { articles: [], recArticles: [], recVideos: [], music: [] };
+  saveHidden(hidden);
+  renderContent();
+}
+
+async function init() {
+  setLang(initialLang);
+  setTheme(initialTheme);
+  initSections();
+  await loadBaseContent();
+  renderContent();
+}
+
+init();
 
 if (themeToggle) {
   themeToggle.addEventListener("click", () => {
@@ -581,11 +710,10 @@ if (copyBtn) {
   copyBtn.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(email);
-      const dict = translations[currentLang] || translations.en;
+      const dict = getDict();
       copyBtn.textContent = dict.copy_success;
       setTimeout(() => {
-        const latest = translations[currentLang] || translations.en;
-        copyBtn.textContent = latest.contact_copy;
+        copyBtn.textContent = getDict().contact_copy;
       }, 1600);
     } catch (error) {
       window.location.href = `mailto:${email}`;
@@ -636,7 +764,7 @@ if (publishForm) {
 
     const list = sectionLists[section];
     if (list) {
-      const card = createCardElement(item, section);
+      const card = createCardElement(item, section, "local");
       list.prepend(card);
     }
 
@@ -652,15 +780,37 @@ if (resetFormBtn && publishForm) {
   resetFormBtn.addEventListener("click", () => publishForm.reset());
 }
 
+if (exportBtn) {
+  exportBtn.addEventListener("click", () => {
+    const data = mergeContentForExport();
+    downloadJSON(data, "content.json");
+  });
+}
+
+if (importInput) {
+  importInput.addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      applyContentOverride(data);
+    } catch (error) {
+      // ignore invalid json
+    }
+  });
+}
+
 if (document.body) {
   document.body.addEventListener("click", (event) => {
     const button = event.target.closest("[data-delete-item]");
     if (!button) return;
     const sectionKey = button.dataset.section;
     const itemId = button.dataset.itemId;
+    const origin = button.dataset.origin || "local";
     const card = button.closest(".content-card");
     if (!sectionKey || !itemId) return;
-    deleteItem(sectionKey, itemId, card);
+    deleteItem(sectionKey, itemId, origin, card);
   });
 }
 
