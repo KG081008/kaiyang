@@ -725,6 +725,11 @@ main {
   line-height: 1.6;
 }
 
+[data-searchable].is-match {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow);
+}
+
 .card.span-7 {
   grid-column: span 7;
 }

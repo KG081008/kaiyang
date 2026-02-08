@@ -46,6 +46,7 @@ let authState = { available: false, admin: false, email: "" };
 let backupSyncAttempted = false;
 let searchWasActive = false;
 let searchPrevState = null;
+let lastSearchQuery = "";
 
 const translations = {
   zh: {
@@ -59,6 +60,9 @@ const translations = {
     nav_music: "音乐",
     nav_publish: "发布",
     hero_pill_article: "Cerdà 文章",
+    hero_pill_ethics: "Ethics Bowl",
+    hero_pill_name: "Kling Gu",
+    hero_pill_team: "G10 · China",
     hero_title: "我把学习、研究与项目做成可交付的作品。",
     hero_lead: "聚焦教育/公益组织、辩论与伦理讨论，以及 AI 工具化工作流（Notion/自动化/产品化）。",
     hero_cta_work: "文章分享",
@@ -69,12 +73,15 @@ const translations = {
     meta_interest_value: "Debate · Ethics · Community",
     meta_tools_label: "工具控",
     meta_tools_value: "Notion · Automation · Research",
-    tab_profile: "Profile",
-    tab_labs: "Labs",
-    tab_field: "Field",
-    stack_title: "Current focus",
+    tab_profile: "简介",
+    tab_labs: "实验",
+    tab_field: "实地",
+    stack_title: "当前重点",
     stack_desc: "把复杂议题转化为可训练、可讨论、可复用的知识结构。",
     stack_link: "阅读文章",
+    tag_casewriting: "案例写作",
+    tag_systems: "系统设计",
+    tag_clarity: "清晰表达",
     latest_label: "最新",
     latest_text: "China Ethics Bowl 落地尝试中",
     section_intro_label: "简介",
@@ -182,6 +189,9 @@ const translations = {
     nav_music: "Music",
     nav_publish: "Publish",
     hero_pill_article: "Cerdà Article",
+    hero_pill_ethics: "Ethics Bowl",
+    hero_pill_name: "Kling Gu",
+    hero_pill_team: "G10 · China",
     hero_title: "I turn study, research, and projects into deliverables.",
     hero_lead:
       "Focused on education/public-good orgs, debate & ethics, and AI-enabled workflows (Notion/automation/productization).",
@@ -200,6 +210,9 @@ const translations = {
     stack_desc:
       "Turning complex issues into trainable, discussable, reusable knowledge structures.",
     stack_link: "Read article",
+    tag_casewriting: "Casewriting",
+    tag_systems: "Systems",
+    tag_clarity: "Clarity",
     latest_label: "Latest",
     latest_text: "Piloting China Ethics Bowl",
     section_intro_label: "Intro",
@@ -326,7 +339,7 @@ const savedTheme = localStorage.getItem("theme");
 const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
 const savedLang = localStorage.getItem("lang");
 const browserLang = navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
-const initialLang = savedLang || browserLang;
+const initialLang = savedLang || "zh";
 
 function getDict() {
   return translations[currentLang] || translations.zh;
@@ -557,11 +570,16 @@ function applySearchFilter() {
     searchWasActive = false;
   }
   let visible = 0;
+  let firstMatch = null;
   document.querySelectorAll("[data-searchable]").forEach((el) => {
     const text = el.dataset.searchText || "";
     const match = tokens.length === 0 || tokens.every((token) => text.includes(token));
     el.style.display = match ? "" : "none";
+    el.classList.toggle("is-match", isActive && match);
     if (match) visible += 1;
+    if (match && !firstMatch) {
+      firstMatch = el;
+    }
   });
   if (searchEmpty) {
     searchEmpty.style.display = query && visible === 0 ? "block" : "none";
@@ -571,6 +589,10 @@ function applySearchFilter() {
     const template = dict.search_count || "{count}";
     searchCount.textContent = template.replace("{count}", String(visible));
   }
+  if (isActive && firstMatch && query !== lastSearchQuery) {
+    firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  lastSearchQuery = query;
   updateEmptyStates();
 }
 
