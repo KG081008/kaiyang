@@ -166,53 +166,6 @@
           </div>
         </div>
         <div class="section-body" data-section-body="publish">
-          <div class="auth-panel" data-auth-panel>
-            <div>
-              <p class="section-label" data-i18n="auth_label">Admin</p>
-              <h3 data-i18n="auth_title">管理员登录</h3>
-              <p class="section-lead" data-i18n="auth_lead">输入管理员邮箱和密码即可登录。</p>
-            </div>
-            <form class="auth-actions" data-auth-form>
-              <div class="form-field">
-                <label class="form-label" data-i18n="auth_email_label">管理员邮箱</label>
-                <input
-                  type="email"
-                  name="email"
-                  data-i18n-placeholder="auth_email_placeholder"
-                  placeholder="admin@email.com"
-                  required
-                />
-              </div>
-              <div class="form-field">
-                <label class="form-label" data-i18n="auth_password_label">管理员密码</label>
-                <input
-                  type="password"
-                  name="password"
-                  data-i18n-placeholder="auth_password_placeholder"
-                  placeholder="******"
-                  required
-                />
-              </div>
-              <div class="form-actions">
-                <button class="btn primary" type="submit" data-login-btn data-i18n="auth_login">
-                  登录
-                </button>
-                <button
-                  class="btn ghost"
-                  type="button"
-                  data-logout-btn
-                  data-i18n="auth_logout"
-                  hidden
-                >
-                  退出登录
-                </button>
-              </div>
-              <div class="auth-meta">
-                <span class="auth-status" data-auth-status>未登录</span>
-                <span class="auth-email" data-auth-email></span>
-              </div>
-            </form>
-          </div>
           <form class="publish-form admin-only" data-publish-form data-admin-only hidden>
             <div class="form-field">
               <label class="form-label" data-i18n="publish_section_label">选择板块</label>
@@ -417,6 +370,70 @@
                 <a href="https://x.com/kling_gu" target="_blank" rel="noopener">X</a>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="admin">
+        <div class="section-head">
+          <div>
+            <p class="section-label" data-i18n="auth_label">Admin</p>
+            <h2 data-i18n="auth_title">管理员登录</h2>
+          </div>
+          <p class="section-lead" data-i18n="auth_lead">输入管理员邮箱和密码即可登录。</p>
+          <div class="section-tools">
+            <button class="chip-btn" type="button" data-section-toggle data-target="admin">
+              收起
+            </button>
+          </div>
+        </div>
+        <div class="section-body" data-section-body="admin">
+          <div class="auth-panel" data-auth-panel>
+            <div>
+              <p class="section-label" data-i18n="auth_label">Admin</p>
+              <h3 data-i18n="auth_title">管理员登录</h3>
+              <p class="section-lead" data-i18n="auth_lead">输入管理员邮箱和密码即可登录。</p>
+            </div>
+            <form class="auth-actions" data-auth-form>
+              <div class="form-field">
+                <label class="form-label" data-i18n="auth_email_label">管理员邮箱</label>
+                <input
+                  type="email"
+                  name="email"
+                  data-i18n-placeholder="auth_email_placeholder"
+                  placeholder="admin@email.com"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" data-i18n="auth_password_label">管理员密码</label>
+                <input
+                  type="password"
+                  name="password"
+                  data-i18n-placeholder="auth_password_placeholder"
+                  placeholder="******"
+                  required
+                />
+              </div>
+              <div class="form-actions">
+                <button class="btn primary" type="submit" data-login-btn data-i18n="auth_login">
+                  登录
+                </button>
+                <button
+                  class="btn ghost"
+                  type="button"
+                  data-logout-btn
+                  data-i18n="auth_logout"
+                  hidden
+                >
+                  退出登录
+                </button>
+              </div>
+              <div class="auth-meta">
+                <span class="auth-status" data-auth-status>未登录</span>
+                <span class="auth-email" data-auth-email></span>
+              </div>
+            </form>
           </div>
         </div>
       </section>

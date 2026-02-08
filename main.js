@@ -121,6 +121,8 @@ const translations = {
     publish_need_login: "请先登录管理员账户。",
     publish_cover_too_large: "封面文件过大，请小于 1.5MB。",
     publish_syncing: "检测到未同步内容，正在自动同步...",
+    publish_confirm: "确认发布这条内容？",
+    delete_confirm: "确认删除这条内容？",
     section_articles_label: "文章",
     section_articles_title: "文章分享",
     section_articles_lead: "选择性发布的阅读与研究片段。",
@@ -244,6 +246,8 @@ const translations = {
     publish_need_login: "Please sign in as admin first.",
     publish_cover_too_large: "Cover file is too large. Please keep it under 1.5MB.",
     publish_syncing: "Unsynced content detected. Syncing now...",
+    publish_confirm: "Publish this item?",
+    delete_confirm: "Delete this item?",
     section_articles_label: "Articles",
     section_articles_title: "Article Share",
     section_articles_lead: "Selected reading and research excerpts.",
@@ -1020,6 +1024,7 @@ if (publishForm) {
     const link = String(formData.get("link") || "").trim();
 
     if (!section || !title || !desc || !link) return;
+    if (!window.confirm(dict.publish_confirm || "Confirm publish?")) return;
 
     const coverFile = publishForm.querySelector('input[name="coverFile"]').files[0];
     let coverDataUrl = "";
@@ -1093,6 +1098,7 @@ if (document.body) {
     const deleteBtn = event.target.closest("[data-delete-item]");
     if (!deleteBtn) return;
     if (!authState.admin) return;
+    if (!window.confirm(getDict().delete_confirm || "Confirm delete?")) return;
 
     const sectionKey = deleteBtn.dataset.section;
     const itemId = deleteBtn.dataset.itemId;
