@@ -44,6 +44,8 @@ let sectionState = JSON.parse(localStorage.getItem(SECTION_STATE_KEY) || "{}");
 let editState = null;
 let authState = { available: false, admin: false, email: "" };
 let backupSyncAttempted = false;
+let searchWasActive = false;
+let searchPrevState = null;
 
 const translations = {
   zh: {
@@ -477,6 +479,22 @@ function setSectionCollapsed(id, collapsed, persist = true) {
   updateSectionToggleLabels();
 }
 
+function expandAllSections() {
+  Object.keys(sectionState).forEach((id) => {
+    setSectionCollapsed(id, false, false);
+  });
+  localStorage.setItem(SECTION_STATE_KEY, JSON.stringify(sectionState));
+}
+
+function restoreSectionState(previous) {
+  if (!previous) return;
+  sectionState = { ...sectionState, ...previous };
+  Object.keys(sectionState).forEach((id) => {
+    setSectionCollapsed(id, !!sectionState[id], false);
+  });
+  localStorage.setItem(SECTION_STATE_KEY, JSON.stringify(sectionState));
+}
+
 function initSections() {
   document.querySelectorAll("[data-section-toggle]").forEach((btn) => {
     const id = btn.dataset.target;
@@ -528,6 +546,16 @@ function applySearchFilter() {
   if (!searchInput) return;
   const query = searchInput.value.trim().toLowerCase();
   const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
+  const isActive = tokens.length > 0;
+  if (isActive && !searchWasActive) {
+    searchPrevState = { ...sectionState };
+    searchWasActive = true;
+    expandAllSections();
+  } else if (!isActive && searchWasActive) {
+    restoreSectionState(searchPrevState);
+    searchPrevState = null;
+    searchWasActive = false;
+  }
   let visible = 0;
   document.querySelectorAll("[data-searchable]").forEach((el) => {
     const text = el.dataset.searchText || "";
