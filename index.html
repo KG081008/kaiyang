@@ -8,7 +8,11 @@
       name="description"
       content="Kling 的个人介绍主页，文章分享 + 音乐分享 + 推荐内容。"
     />
-<meta name="api-base" content="https://personal-web-backend-orcin.vercel.app" />
+    <meta name="api-base" content="https://personal-web-backend-orcin.vercel.app" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="./assets/favicon.ico" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -30,7 +34,10 @@
           <button class="chip-btn" type="button" data-lang-toggle>中文 / EN</button>
         </div>
       </div>
-      <div class="brand">Kling</div>
+      <div class="brand">
+        <img class="brand-logo" src="./assets/logo.png" alt="Kling logo" loading="lazy" />
+        <span>Kling</span>
+      </div>
       <nav class="header-nav">
         <a href="#intro" data-i18n="nav_intro">Intro</a>
         <a href="#search" data-i18n="nav_search">Search</a>
