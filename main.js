@@ -761,12 +761,7 @@ function updateAuthUI() {
   const dict = getDict();
   if (!authState.available) {
     authStatus.textContent = dict.auth_status_unavailable;
-    if (loginBtn) loginBtn.disabled = true;
-    if (authForm) {
-      authForm.querySelectorAll("input").forEach((input) => {
-        input.disabled = true;
-      });
-    }
+    if (loginBtn) loginBtn.disabled = false;
     if (logoutBtn) logoutBtn.hidden = true;
     adminOnlyEls.forEach((el) => (el.hidden = true));
     return;
